@@ -30,7 +30,58 @@ let state = {
     theme: 'violet',
     steamApiKey: '',
     steamId: '',
-    profile: { xp: 0, level: 1, gold: 0 }
+    profile: { xp: 0, level: 1, gold: 0 },
+    lastVersionSeen: ''
+};
+
+// ---------- Changelogs ----------
+const CHANGELOGS = {
+    '0.0.2': {
+        title: "Quest Log v0.0.2 — Update Stabilité",
+        date: "6 Juillet 2026",
+        badge: "Beta Update",
+        items: [
+            {
+                title: "📥 Auto-Updater Intégré",
+                desc: "Recherche en arrière-plan et téléchargement en un clic de tes futures mises à jour avec barre de progression néon.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>`
+            },
+            {
+                title: "📦 Installateur Windows Setup",
+                desc: "Création d'un exécutable d'installation (.exe) pour intégrer proprement l'app, le Tray et les raccourcis système.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>`
+            },
+            {
+                title: "🔒 Instance de Processus Unique",
+                desc: "Empêche d'ouvrir l'application plusieurs fois en tâche de fond et résout les doublons d'icônes dans ton Tray.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>`
+            },
+            {
+                title: "💨 Fermeture Animée & Tray",
+                desc: "Fermer l'app déclenche une transition de fondu avec notification pour t'indiquer qu'elle continue de tourner en arrière-plan.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+                </svg>`
+            },
+            {
+                title: "🆕 Écran des Nouveautés",
+                desc: "Cette interface s'ouvre dorénavant d'elle-même après chaque mise à jour pour te présenter tous les derniers ajouts !",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                </svg>`
+            }
+        ]
+    }
 };
 
 // ---------- Update UI Flag ----------
@@ -1861,7 +1912,23 @@ function initEvents() {
     if (isElectron) {
         $('#btn-win-minimize')?.addEventListener('click', () => window.questlog.minimizeWindow());
         $('#btn-win-maximize')?.addEventListener('click', () => window.questlog.maximizeWindow());
-        $('#btn-win-close')?.addEventListener('click', () => window.questlog.closeWindow());
+        $('#btn-win-close')?.addEventListener('click', () => {
+            // Show toast in the premium White SVG theme
+            showToast("Quest Log continue de tourner en arrière-plan dans la zone de notification (Tray) ! 🤖", "ℹ️");
+            
+            // Start elegant CSS transition to hide window
+            document.body.classList.add('reducing');
+            
+            // Wait 2.2 seconds before actual window hiding in main process
+            setTimeout(() => {
+                window.questlog.closeWindow();
+            }, 2200);
+        });
+
+        // Listen for windows showing event to restore state
+        window.questlog.onWindowShown(() => {
+            document.body.classList.remove('reducing');
+        });
     } else {
         const tb = $('#app-titlebar');
         if (tb) tb.style.display = 'none';
@@ -2452,6 +2519,11 @@ function initEvents() {
         const checkBtn = $('#btn-check-updates');
         if (checkBtn) checkBtn.disabled = true;
     }
+
+    // Changelog close button
+    $('#btn-close-changelog')?.addEventListener('click', () => {
+        closeModal($('#changelog-overlay'));
+    });
 }
 
 // ---------- Particles ----------
@@ -2555,6 +2627,74 @@ async function init() {
 
     if (!state.currentGameId && state.backlog.length > 0) {
         pickRandomGame(false);
+    }
+
+    // Check if app version has updated to show release notes
+    await checkAndShowChangelog();
+}
+
+async function checkAndShowChangelog() {
+    if (!isElectron) return;
+    try {
+        const currentVersion = await window.questlog.getAppVersion();
+        const lastSeen = state.lastVersionSeen || '';
+        
+        // Only show if the version has changed
+        if (currentVersion && lastSeen !== currentVersion) {
+            // If it's a completely clean installation with no games and no username,
+            // just silently record version to avoid cluttering startup screen for new users.
+            if (state.backlog.length === 0 && state.completed.length === 0 && (!state.profile || !state.profile.username)) {
+                state.lastVersionSeen = currentVersion;
+                await saveState();
+                return;
+            }
+            
+            const logData = CHANGELOGS[currentVersion];
+            if (logData) {
+                const badgeEl = $('#changelog-badge');
+                const titleEl = $('#changelog-modal-title');
+                const dateEl = $('#changelog-date');
+                const listEl = $('#changelog-items-list');
+
+                if (badgeEl) badgeEl.textContent = logData.badge;
+                if (titleEl) titleEl.textContent = logData.title;
+                if (dateEl) dateEl.textContent = `Date de déploiement : ${logData.date}`;
+                
+                if (listEl) {
+                    listEl.innerHTML = '';
+                    logData.items.forEach(item => {
+                        const itemEl = document.createElement('div');
+                        itemEl.style.display = 'flex';
+                        itemEl.style.gap = '14px';
+                        itemEl.style.alignItems = 'flex-start';
+                        itemEl.style.background = 'rgba(255, 255, 255, 0.02)';
+                        itemEl.style.border = '1px solid var(--bg-glass-border)';
+                        itemEl.style.borderRadius = 'var(--radius-md)';
+                        itemEl.style.padding = '12px';
+                        
+                        itemEl.innerHTML = `
+                            <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; background: rgba(244, 114, 182, 0.1); border: 1px solid rgba(244, 114, 182, 0.2); display: flex; align-items: center; justify-content: center; color: var(--accent-pink);">
+                                ${item.icon}
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 4px; text-align: left;">
+                                <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">${item.title}</h4>
+                                <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;">${item.desc}</p>
+                            </div>
+                        `;
+                        listEl.appendChild(itemEl);
+                    });
+                }
+                
+                // Save version seen
+                state.lastVersionSeen = currentVersion;
+                await saveState();
+                
+                // Show modal
+                openModal($('#changelog-overlay'));
+            }
+        }
+    } catch (e) {
+        console.error('Failed to check changelog:', e);
     }
 }
 

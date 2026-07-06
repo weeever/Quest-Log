@@ -1,6 +1,6 @@
 {
   "name": "questlog",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "Quest Log — Game Backlog Tracker",
   "main": "main.js",
   "scripts": {

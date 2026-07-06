@@ -69,6 +69,8 @@ contextBridge.exposeInMainWorld('questlog', {
     installUpdateNow: () => ipcRenderer.invoke('install-update-now'),
     onUpdateStatus: (callback) => ipcRenderer.on('update-status', (event, status, info) => callback(status, info)),
     onUpdateProgress: (callback) => ipcRenderer.on('update-progress', (event, percent) => callback(percent)),
+    onWindowShown: (callback) => ipcRenderer.on('window-shown', () => callback()),
+    getAppVersion: () => ipcRenderer.invoke('get-app-version'),
 
     // Platform detection
     isElectron: true

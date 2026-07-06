@@ -932,6 +932,35 @@
         </div>
     </div>
 
+    <!-- ===== CHANGELOG MODAL ===== -->
+    <div id="changelog-overlay" class="modal-overlay" aria-hidden="true" style="z-index: 9998;">
+        <div id="modal-changelog" class="modal" role="dialog" aria-labelledby="changelog-modal-title" style="max-width: 550px; padding: 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(167, 139, 250, 0.15); border: 1px solid var(--accent-violet); display: flex; align-items: center; justify-content: center; color: var(--accent-violet);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                </div>
+                <div>
+                    <span id="changelog-badge" style="font-size: 0.7rem; font-weight: 800; background: rgba(236, 72, 153, 0.1); color: var(--accent-pink); padding: 2px 8px; border-radius: 20px; text-transform: uppercase;">Mise à Jour</span>
+                    <h2 id="changelog-modal-title" class="modal-title" style="margin: 4px 0 0 0; font-size: 1.4rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Nouveautés de la Version</h2>
+                </div>
+            </div>
+            
+            <p id="changelog-date" style="font-size: 0.8rem; color: var(--text-tertiary); margin-top: -8px; margin-bottom: 16px; border-bottom: 1px solid var(--bg-glass-border); padding-bottom: 10px;">Date : 6 juillet 2026</p>
+            
+            <div id="changelog-items-list" style="display: flex; flex-direction: column; gap: 14px; max-height: 380px; overflow-y: auto; padding-right: 6px; margin-bottom: 20px;">
+                <!-- Items populated dynamically in app.js -->
+            </div>
+
+            <button id="btn-close-changelog" class="btn-primary btn-full" style="padding: 12px; font-weight: 700;">C'est parti ! 🚀</button>
+        </div>
+    </div>
+
     <!-- ===== AUTO-UPDATE MODAL ===== -->
     <div id="update-overlay" class="modal-overlay" aria-hidden="true" style="z-index: 9999;">
         <div id="modal-update" class="modal modal-small" role="dialog" aria-labelledby="update-modal-title">

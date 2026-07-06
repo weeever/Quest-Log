@@ -16,6 +16,28 @@ autoUpdater.logger = console;
 autoUpdater.autoDownload = false; // Nice interactive download popup
 autoUpdater.allowPrerelease = true; // Allow detecting beta / pre-release updates on GitHub
 
+// ---------- Single Instance Lock ----------
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+    app.quit();
+    process.exit(0);
+}
+
+function showMainWindow() {
+    if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        mainWindow.show();
+        mainWindow.focus();
+        try {
+            mainWindow.webContents.send('window-shown');
+        } catch (e) {}
+    }
+}
+
+app.on('second-instance', (event, commandLine, workingDirectory) => {
+    showMainWindow();
+});
+
 // ---------- Discord RPC Config ----------
 const DISCORD_CLIENT_ID = '1523420200081428711'; // Quest Log Discord App ID
 let rpcClient = null;
@@ -39,6 +61,8 @@ let tray = null;
 let isQuitting = false;
 
 function createWindow() {
+    const startMinimized = process.argv.includes('--hidden') || process.argv.includes('-s');
+
     mainWindow = new BrowserWindow({
         width: 1400,
         height: 900,
@@ -48,6 +72,7 @@ function createWindow() {
         icon: path.join(__dirname, 'icon.png'),
         backgroundColor: '#0a0a0f',
         frame: false,
+        show: false, // Don't show immediately to prevent flash and allow background start
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
@@ -57,6 +82,15 @@ function createWindow() {
     });
 
     mainWindow.loadFile('index.html');
+
+    // Show window only when ready (if not starting minimized)
+    mainWindow.once('ready-to-show', () => {
+        if (!startMinimized) {
+            mainWindow.show();
+        } else {
+            console.log('Quest Log started minimized in tray.');
+        }
+    });
 
     // Open external links in default browser
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
@@ -85,7 +119,7 @@ function createTray() {
         }
 
         const contextMenu = Menu.buildFromTemplate([
-            { label: 'Afficher Quest Log', click: () => mainWindow.show() },
+            { label: 'Afficher Quest Log', click: () => showMainWindow() },
             { type: 'separator' },
             { label: 'Quitter', click: () => {
                 isQuitting = true;
@@ -97,7 +131,7 @@ function createTray() {
         tray.setContextMenu(contextMenu);
 
         tray.on('double-click', () => {
-            mainWindow.show();
+            showMainWindow();
         });
     } catch (e) {
         console.error('Failed to create tray:', e);
@@ -979,7 +1013,9 @@ ipcMain.handle('set-auto-launch', async (event, enabled) => {
     try {
         app.setLoginItemSettings({
             openAtLogin: enabled,
-            openAsHidden: true
+            openAsHidden: enabled,
+            path: app.getPath('exe'),
+            args: ['--hidden']
         });
         return { success: true };
     } catch (e) {
@@ -994,6 +1030,10 @@ ipcMain.handle('get-auto-launch', async () => {
     } catch (e) {
         return false;
     }
+});
+
+ipcMain.handle('get-app-version', () => {
+    return app.getVersion();
 });
 
 // ---------- Overlay & Universal Achievements Engine ----------
