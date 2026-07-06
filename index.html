@@ -18,7 +18,7 @@
     <!-- Titlebar (Electron Only) -->
     <div id="app-titlebar" class="app-titlebar">
         <div class="titlebar-drag-region"></div>
-        <div class="titlebar-title">Quest Log - Beta 0.0.1</div>
+        <div class="titlebar-title">Quest Log - Beta 0.0.2</div>
         <div class="titlebar-controls">
             <button id="btn-win-minimize" class="titlebar-btn" aria-label="Minimiser">
                 <svg width="12" height="12" viewBox="0 0 12 12">
@@ -114,6 +114,14 @@
                     style="border-color: rgba(251, 191, 36, 0.3); background: rgba(251, 191, 36, 0.05);">
                     <span class="stat-icon">🪙</span>
                     <span class="stat-value" id="gold-count" style="color: #fbbf24; font-weight: 800;">0</span>
+                </div>
+                <div class="stat-chip" id="stat-total-playtime" title="Temps de jeu total"
+                    style="border-color: rgba(167, 139, 250, 0.3); background: rgba(167, 139, 250, 0.05);">
+                    <span class="stat-icon"><svg class="stat-svg" viewBox="0 0 24 24" style="stroke: var(--accent-violet);">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg></span>
+                    <span class="stat-value" id="total-playtime-count" style="color: var(--accent-violet); font-weight: 800;">0h</span>
                 </div>
                 <div class="stat-chip" id="stat-avg-rating" title="Note moyenne">
                     <span class="stat-icon"><svg class="stat-svg" viewBox="0 0 24 24">

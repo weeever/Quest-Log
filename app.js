@@ -36,6 +36,44 @@ let state = {
 
 // ---------- Changelogs ----------
 const CHANGELOGS = {
+    '0.0.2': {
+        title: "Quest Log v0.0.2 — Update Expérience",
+        date: "6 Juillet 2026",
+        badge: "Hotfix & Features",
+        items: [
+            {
+                title: "🕒 Temps de Jeu Cumulé",
+                desc: "Un nouveau compteur de temps global dans le header pour suivre ton temps de jeu total accumulé sur tout ton backlog.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>`
+            },
+            {
+                title: "⌨️ Raccourci Clavier Global",
+                desc: "Affiche ou masque instantanément Quest Log depuis n'importe où en appuyant sur Ctrl + Alt + Q.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <rect x="2" y="4" width="20" height="16" rx="2" ry="2"/>
+                    <line x1="6" y1="8" x2="6.01" y2="8"/>
+                    <line x1="10" y1="8" x2="10.01" y2="8"/>
+                    <line x1="14" y1="8" x2="14.01" y2="8"/>
+                    <line x1="18" y1="8" x2="18.01" y2="8"/>
+                    <line x1="6" y1="12" x2="6.01" y2="12"/>
+                    <line x1="10" y1="12" x2="10.01" y2="12"/>
+                    <line x1="14" y1="12" x2="14.01" y2="12"/>
+                    <line x1="18" y1="12" x2="18.01" y2="12"/>
+                    <line x1="7" y1="16" x2="17" y2="16"/>
+                </svg>`
+            },
+            {
+                title: "📐 Coins Arrondis Windows 11",
+                desc: "La fenêtre de l'application s'aligne sur les codes de l'OS avec des coins arrondis natifs et une ombre portée premium.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <rect x="3" y="3" width="18" height="18" rx="4"/>
+                </svg>`
+            }
+        ]
+    },
     '0.0.1': {
         title: "Quest Log v0.0.1 — Update Stabilité",
         date: "6 Juillet 2026",
@@ -505,6 +543,14 @@ function updateStats() {
     const progress = total > 0 ? (state.completed.length / total) * 100 : 0;
     $('#global-progress-pct').textContent = `${Math.round(progress)}%`;
     $('#global-progress-fill').style.width = `${progress}%`;
+
+    // Calculate total playtime
+    const totalPlaytimeMinutes = [...state.backlog, ...state.completed].reduce((sum, g) => sum + (g.playtime || 0), 0);
+    const totalPlaytimeHours = Math.round(totalPlaytimeMinutes / 60);
+    const statPlaytime = $('#total-playtime-count');
+    if (statPlaytime) {
+        statPlaytime.textContent = `${totalPlaytimeHours}h`;
+    }
 }
 
 function updateNowPlaying() {

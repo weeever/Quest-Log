@@ -3,7 +3,7 @@
    IGDB Proxy + File-based Save + Window
    ============================================ */
 
-const { app, BrowserWindow, ipcMain, shell, Tray, Menu, nativeImage } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, Tray, Menu, nativeImage, globalShortcut } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
@@ -77,7 +77,7 @@ function createWindow() {
         title: 'Quest Log',
         icon: path.join(__dirname, 'icon.png'),
         frame: false,
-        transparent: true, // Enable window transparency for rounded corners and desktop glassmorphism
+        backgroundColor: '#0a0a0f', // Stable opaque background
         show: false, // Don't show immediately to prevent flash and allow background start
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
@@ -995,6 +995,21 @@ app.whenReady().then(() => {
     createTray();
     startBackgroundProcessMonitor();
 
+    // Register global hotkey (Ctrl + Alt + Q) to toggle app window visibility
+    try {
+        globalShortcut.register('Control+Alt+Q', () => {
+            if (mainWindow) {
+                if (mainWindow.isVisible() && mainWindow.isFocused()) {
+                    mainWindow.hide();
+                } else {
+                    showMainWindow();
+                }
+            }
+        });
+    } catch (e) {
+        console.warn('Failed to register global shortcut:', e);
+    }
+
     // Check for updates silently after startup (with 3s delay)
     setTimeout(() => {
         autoUpdater.checkForUpdatesAndNotify().catch(err => {
@@ -1005,6 +1020,11 @@ app.whenReady().then(() => {
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
+});
+
+app.on('will-quit', () => {
+    // Unregister all global shortcuts to release system resources cleanly
+    globalShortcut.unregisterAll();
 });
 
 app.on('window-all-closed', () => {

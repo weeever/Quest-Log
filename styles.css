@@ -65,7 +65,7 @@
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { font-size: 16px; -webkit-font-smoothing: antialiased; }
-body { font-family: var(--font-body); background-color: var(--bg-primary); color: var(--text-primary); min-height: 100vh; height: 100vh; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+body { font-family: var(--font-body); background-color: var(--bg-primary); color: var(--text-primary); min-height: 100vh; height: 100vh; overflow: hidden; display: flex; flex-direction: column; position: relative; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08); }
 
 /* Custom Scrollbar Theme */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
