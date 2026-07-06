@@ -2553,7 +2553,8 @@ function initEvents() {
                     
                     // Only show alert to user if it was a manual click, and format it cleanly
                     if (isManualUpdateCheck) {
-                        showToast("Impossible de contacter le serveur de mise à jour. Réessaye plus tard.", "❌");
+                        const errMsg = info ? (info.message || info) : 'Inaccessible';
+                        showToast(`Erreur de connexion : ${errMsg}`, "❌");
                     }
                     isManualUpdateCheck = false;
                 }

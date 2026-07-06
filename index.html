@@ -971,32 +971,34 @@
 
     <!-- ===== AUTO-UPDATE MODAL ===== -->
     <div id="update-overlay" class="modal-overlay" aria-hidden="true" style="z-index: 9999;">
-        <div id="modal-update" class="modal modal-small" role="dialog" aria-labelledby="update-modal-title">
-            <div class="update-icon-wrapper" style="margin: 0 auto 16px auto; width: 60px; height: 60px; border-radius: 50%; background: rgba(167, 139, 250, 0.1); border: 2px solid var(--accent-pink); display: flex; align-items: center; justify-content: center; color: var(--accent-pink);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 32px; height: 32px;">
+        <div id="modal-update" class="modal modal-small" role="dialog" aria-labelledby="update-modal-title"
+             style="border: 1px solid rgba(167, 139, 250, 0.2); box-shadow: 0 0 35px rgba(167, 139, 250, 0.15), var(--shadow-lg); text-align: center; background: var(--bg-secondary); backdrop-filter: blur(20px);">
+            <div class="update-icon-wrapper" style="margin: 0 auto 20px auto; width: 70px; height: 70px; border-radius: 50%; background: rgba(167, 139, 250, 0.08); border: 2px dashed var(--accent-violet); display: flex; align-items: center; justify-content: center; color: var(--accent-violet); animation: pulse-update-icon 2s infinite alternate;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 32px; height: 32px; animation: spin 8s linear infinite;">
                     <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
                 </svg>
             </div>
-            <h3 id="update-modal-title" class="modal-title">Mise à Jour Disponible</h3>
-            <p id="update-modal-version" style="font-size: 0.85rem; font-weight: 700; color: var(--accent-pink); margin-top: -6px; margin-bottom: 12px;">Version 1.1.0</p>
-            <p id="update-modal-message" class="confirm-message" style="margin-bottom: 20px; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">
+            <h3 id="update-modal-title" class="modal-title" style="font-size: 1.6rem; font-weight: 900; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; display: inline-block;">Mise à Jour Disponible</h3>
+            <p id="update-modal-version" style="font-size: 0.9rem; font-weight: 700; color: var(--accent-pink); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Version 1.0.0</p>
+            
+            <p id="update-modal-message" class="confirm-message" style="margin-bottom: 24px; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; text-align: center; padding: 0 10px;">
                 Une nouvelle version de Quest Log est disponible. Souhaitez-vous la télécharger maintenant ?
             </p>
             
             <!-- Download Progress section -->
-            <div id="update-progress-container" style="display:none; width: 100%; margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-tertiary); margin-bottom: 6px;">
-                    <span>Téléchargement...</span>
-                    <span id="update-progress-percent">0%</span>
+            <div id="update-progress-container" style="display:none; width: 100%; margin-bottom: 24px; text-align: left;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">
+                    <span>Téléchargement en cours...</span>
+                    <span id="update-progress-percent" style="color: var(--accent-pink);">0%</span>
                 </div>
-                <div class="progress-bar-bg" style="height: 8px;">
-                    <div class="progress-bar-fill" id="update-progress-bar" style="width: 0%; background: linear-gradient(90deg, var(--accent-violet) 0%, var(--accent-pink) 100%); box-shadow: 0 0 10px rgba(236,72,153,0.5);"></div>
+                <div class="progress-bar-bg" style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03);">
+                    <div class="progress-bar-fill" id="update-progress-bar" style="width: 0%; background: linear-gradient(90deg, var(--accent-violet) 0%, var(--accent-pink) 100%); box-shadow: 0 0 15px rgba(236,72,153,0.6); border-radius: 4px; transition: width 0.1s ease;"></div>
                 </div>
             </div>
 
-            <div class="settings-buttons" id="update-modal-actions">
-                <button id="btn-update-cancel" class="btn-secondary">Plus tard</button>
-                <button id="btn-update-confirm" class="btn-primary" style="padding: 10px 20px; font-weight: 700;">Télécharger</button>
+            <div class="settings-buttons" id="update-modal-actions" style="display: flex; gap: 12px; justify-content: center; width: 100%;">
+                <button id="btn-update-cancel" class="btn-secondary" style="flex: 1; padding: 12px 20px; font-weight: 700; border-radius: var(--radius-md);">Plus tard</button>
+                <button id="btn-update-confirm" class="btn-primary" style="flex: 1; padding: 12px 20px; font-weight: 700; border-radius: var(--radius-md); background: var(--gradient-primary); box-shadow: var(--shadow-glow); border: none; color: white; cursor: pointer;">Télécharger</button>
             </div>
         </div>
     </div>

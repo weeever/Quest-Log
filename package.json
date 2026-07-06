@@ -51,7 +51,8 @@
       "installerIcon": "icon.ico",
       "uninstallerIcon": "icon.ico",
       "installerHeaderIcon": "icon.ico",
-      "runAfterFinish": true
+      "runAfterFinish": true,
+      "artifactName": "Quest.Log.Setup.${version}.${ext}"
     }
   },
   "dependencies": {
