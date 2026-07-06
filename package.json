@@ -31,6 +31,7 @@
       "styles.css",
       "app.js",
       "icon.png",
+      "icon.ico",
       "overlay.html",
       "overlay.css"
     ],
@@ -38,7 +39,7 @@
       "target": [
         "nsis"
       ],
-      "icon": "icon.png"
+      "icon": "icon.ico"
     },
     "nsis": {
       "oneClick": false,
@@ -46,9 +47,9 @@
       "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
       "shortcutName": "Quest Log",
-      "installerIcon": "icon.png",
-      "uninstallerIcon": "icon.png",
-      "installerHeaderIcon": "icon.png",
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "installerHeaderIcon": "icon.ico",
       "runAfterFinish": true
     }
   },
