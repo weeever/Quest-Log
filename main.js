@@ -14,6 +14,7 @@ const RPC = require('discord-rpc');
 // Configure auto updater properties
 autoUpdater.logger = console;
 autoUpdater.autoDownload = false; // Nice interactive download popup
+autoUpdater.allowPrerelease = true; // Allow detecting beta / pre-release updates on GitHub
 
 // ---------- Discord RPC Config ----------
 const DISCORD_CLIENT_ID = '1523420200081428711'; // Quest Log Discord App ID

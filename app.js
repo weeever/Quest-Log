@@ -33,6 +33,9 @@ let state = {
     profile: { xp: 0, level: 1, gold: 0 }
 };
 
+// ---------- Update UI Flag ----------
+let isManualUpdateCheck = false;
+
 // ---------- Sound Synthesizer (Web Audio API) ----------
 function playSynthSound(type) {
     try {
@@ -2359,6 +2362,7 @@ function initEvents() {
         
         if (btnCheckUpdates) {
             btnCheckUpdates.addEventListener('click', async () => {
+                isManualUpdateCheck = true;
                 if (updateStatusLabel) {
                     updateStatusLabel.textContent = 'Recherche...';
                     updateStatusLabel.style.color = '';
@@ -2409,7 +2413,10 @@ function initEvents() {
                 } else if (status === 'not-available') {
                     updateStatusLabel.textContent = 'À jour';
                     updateStatusLabel.style.color = 'var(--accent-emerald)';
-                    showToast('Quest Log est déjà à jour !', '✅');
+                    if (isManualUpdateCheck) {
+                        showToast('Quest Log est déjà à jour !', '✅');
+                    }
+                    isManualUpdateCheck = false;
                 } else if (status === 'ready') {
                     updateStatusLabel.textContent = 'Mise à jour prête !';
                     updateStatusLabel.style.color = 'var(--accent-pink)';
@@ -2420,10 +2427,16 @@ function initEvents() {
                     btnUpdateCancel.textContent = 'Annuler';
                     $('#update-modal-message').textContent = "La mise à jour a été téléchargée. Veuillez redémarrer l'application pour l'appliquer.";
                     openModal(updateOverlayEl);
+                    isManualUpdateCheck = false;
                 } else if (status === 'error') {
                     updateStatusLabel.textContent = 'Erreur';
                     updateStatusLabel.style.color = 'var(--accent-red)';
-                    showToast(`Erreur lors de la mise à jour : ${info}`, '❌');
+                    
+                    // Only show alert to user if it was a manual click, and format it cleanly
+                    if (isManualUpdateCheck) {
+                        showToast("Impossible de contacter le serveur de mise à jour. Réessaye plus tard.", "❌");
+                    }
+                    isManualUpdateCheck = false;
                 }
             }
         });
