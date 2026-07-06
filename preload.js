@@ -24,6 +24,7 @@ contextBridge.exposeInMainWorld('questlog', {
     minimizeWindow: () => ipcRenderer.send('window-minimize'),
     maximizeWindow: () => ipcRenderer.send('window-maximize'),
     closeWindow: () => ipcRenderer.send('window-close'),
+    hideWindowWithAnimation: () => ipcRenderer.invoke('hide-window-with-animation'),
 
     // Steam & Game Launching
     selectExe: () => ipcRenderer.invoke('select-exe'),

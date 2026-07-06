@@ -26,6 +26,9 @@ if (!gotTheLock) {
 function showMainWindow() {
     if (mainWindow) {
         if (mainWindow.isMinimized()) mainWindow.restore();
+        try {
+            mainWindow.setOpacity(1.0);
+        } catch (e) {}
         mainWindow.show();
         mainWindow.focus();
         try {
@@ -1590,4 +1593,28 @@ autoUpdater.on('error', (err) => {
     if (mainWindow && !mainWindow.isDestroyed()) {
         mainWindow.webContents.send('update-status', 'error', err ? err.message : 'Unknown error');
     }
+});
+
+// Smoothly fade out the window before hiding it
+ipcMain.handle('hide-window-with-animation', () => {
+    if (!mainWindow) return { success: true };
+    
+    let opacity = 1.0;
+    const interval = setInterval(() => {
+        opacity -= 0.1;
+        if (opacity <= 0.05) {
+            clearInterval(interval);
+            mainWindow.hide();
+            mainWindow.setOpacity(1.0); // Reset for the next show
+        } else {
+            try {
+                mainWindow.setOpacity(opacity);
+            } catch (e) {
+                clearInterval(interval);
+                mainWindow.hide();
+            }
+        }
+    }, 20); // 200ms total fade out
+    
+    return { success: true };
 });

@@ -1916,18 +1916,10 @@ function initEvents() {
             // Show toast in the premium White SVG theme
             showToast("Quest Log continue de tourner en arrière-plan dans la zone de notification (Tray) ! 🤖", "ℹ️");
             
-            // Start elegant CSS transition to hide window
-            document.body.classList.add('reducing');
-            
-            // Wait 2.2 seconds before actual window hiding in main process
+            // Wait 2.2 seconds before actual window hiding in main process with fade out
             setTimeout(() => {
-                window.questlog.closeWindow();
+                window.questlog.hideWindowWithAnimation();
             }, 2200);
-        });
-
-        // Listen for windows showing event to restore state
-        window.questlog.onWindowShown(() => {
-            document.body.classList.remove('reducing');
         });
     } else {
         const tb = $('#app-titlebar');
