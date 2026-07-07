@@ -538,10 +538,11 @@ ipcMain.handle('fetch-steam-achievements', async (event, apiKey, steamId, appId)
     });
 });
 
-ipcMain.handle('fetch-steam-schema', async (event, apiKey, appId) => {
+ipcMain.handle('fetch-steam-schema', async (event, apiKey, appId, lang) => {
     return new Promise((resolve) => {
         const key = apiKey && apiKey.trim() ? apiKey : DEFAULT_STEAM_API_KEY;
-        const url = `https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${key}&appid=${appId}&l=french`;
+        const queryLang = lang || 'french';
+        const url = `https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${key}&appid=${appId}&l=${queryLang}`;
         https.get(url, (res) => {
             let data = '';
             res.on('data', chunk => data += chunk);
@@ -898,10 +899,15 @@ ipcMain.handle('select-achievements-json', async () => {
 });
 
 // Fetch Steam achievements schema publicly from steamcommunity stats page without API key
-ipcMain.handle('fetch-public-steam-schema', async (event, appId) => {
+ipcMain.handle('fetch-public-steam-schema', async (event, appId, lang) => {
     return new Promise((resolve) => {
         const url = `https://steamcommunity.com/stats/${appId}/achievements/?xml=1`;
-        https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' } }, (res) => {
+        const queryLang = lang || 'french';
+        const headers = { 
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Cookie': `l=${queryLang}`
+        };
+        https.get(url, { headers }, (res) => {
             let data = '';
             res.on('data', chunk => data += chunk);
             res.on('end', () => {
@@ -1040,9 +1046,8 @@ ipcMain.handle('set-auto-launch', async (event, enabled) => {
     try {
         app.setLoginItemSettings({
             openAtLogin: enabled,
-            openAsHidden: enabled,
-            path: app.getPath('exe'),
-            args: ['--hidden']
+            path: process.execPath,
+            args: []
         });
         return { success: true };
     } catch (e) {
@@ -1052,7 +1057,10 @@ ipcMain.handle('set-auto-launch', async (event, enabled) => {
 
 ipcMain.handle('get-auto-launch', async () => {
     try {
-        const settings = app.getLoginItemSettings();
+        const settings = app.getLoginItemSettings({
+            path: process.execPath,
+            args: []
+        });
         return settings.openAtLogin;
     } catch (e) {
         return false;

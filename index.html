@@ -18,19 +18,19 @@
     <!-- Titlebar (Electron Only) -->
     <div id="app-titlebar" class="app-titlebar">
         <div class="titlebar-drag-region"></div>
-        <div class="titlebar-title">Quest Log - Beta 0.0.2</div>
+        <div class="titlebar-title" data-i18n="app_title">Quest Log - Beta 0.0.3</div>
         <div class="titlebar-controls">
-            <button id="btn-win-minimize" class="titlebar-btn" aria-label="Minimiser">
+            <button id="btn-win-minimize" class="titlebar-btn" aria-label="Minimiser" data-i18n-aria-label="win_minimize">
                 <svg width="12" height="12" viewBox="0 0 12 12">
                     <rect x="2" y="5" width="8" height="1" fill="currentColor" />
                 </svg>
             </button>
-            <button id="btn-win-maximize" class="titlebar-btn" aria-label="Agrandir">
+            <button id="btn-win-maximize" class="titlebar-btn" aria-label="Agrandir" data-i18n-aria-label="win_maximize">
                 <svg width="12" height="12" viewBox="0 0 12 12">
                     <rect x="2.5" y="2.5" width="7" height="7" fill="none" stroke="currentColor" />
                 </svg>
             </button>
-            <button id="btn-win-close" class="titlebar-btn btn-close-app" aria-label="Fermer">
+            <button id="btn-win-close" class="titlebar-btn btn-close-app" aria-label="Fermer" data-i18n-aria-label="win_close">
                 <svg width="12" height="12" viewBox="0 0 12 12">
                     <path d="M3 3L9 9M9 3L3 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
                 </svg>
@@ -75,23 +75,24 @@
                     <span class="profile-level" id="profile-level">Aventurier • Lvl 1</span>
                     <span class="profile-points" id="profile-points">0 / 1 000 XP</span>
                 </div>
-                <div class="xp-bar-bg" title="Progression du niveau">
+                <div class="xp-bar-bg" title="Progression du niveau" data-i18n-title="title_xp_bar">
                     <div class="xp-bar-fill" id="xp-bar-fill"></div>
                 </div>
             </div>
 
             <div class="header-progress-container">
                 <div class="progress-labels">
-                    <span class="progress-title">Progression Globale</span>
+                    <span class="progress-title" data-i18n="global_progress">Progression Globale</span>
                     <span class="progress-pct" id="global-progress-pct">0%</span>
                 </div>
                 <div class="progress-bar-bg">
                     <div class="progress-bar-fill" id="global-progress-fill"></div>
                 </div>
+                <div id="gamer-quote" style="font-size: 0.7rem; color: var(--text-tertiary); font-style: italic; margin-top: 4px; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; cursor: pointer; user-select: none;" title="Citation de gamer"></div>
             </div>
 
             <div class="header-stats">
-                <div class="stat-chip" id="stat-backlog" title="Jeux dans le backlog">
+                <div class="stat-chip" id="stat-backlog" title="Jeux dans le backlog" data-i18n-title="title_backlog">
                     <span class="stat-icon"><svg class="stat-svg" viewBox="0 0 24 24">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                             <line x1="9" y1="9" x2="15" y2="9" />
@@ -100,7 +101,7 @@
                         </svg></span>
                     <span class="stat-value" id="backlog-count">0</span>
                 </div>
-                <div class="stat-chip" id="stat-completed" title="Jeux terminés">
+                <div class="stat-chip" id="stat-completed" title="Jeux terminés" data-i18n-title="title_completed">
                     <span class="stat-icon"><svg class="stat-svg" viewBox="0 0 24 24">
                             <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
                             <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
@@ -110,20 +111,20 @@
                         </svg></span>
                     <span class="stat-value" id="completed-count">0</span>
                 </div>
-                <div class="stat-chip" id="stat-gold" title="Pièces d'or accumulées"
+                <div class="stat-chip" id="stat-gold" title="Pièces d'or accumulées" data-i18n-title="title_gold"
                     style="border-color: rgba(251, 191, 36, 0.3); background: rgba(251, 191, 36, 0.05);">
                     <span class="stat-icon">🪙</span>
                     <span class="stat-value" id="gold-count" style="color: #fbbf24; font-weight: 800;">0</span>
                 </div>
-                <div class="stat-chip" id="stat-total-playtime" title="Temps de jeu total"
+                <div class="stat-chip" id="stat-total-playtime" title="Temps de jeu total" data-i18n-title="title_playtime"
                     style="border-color: rgba(167, 139, 250, 0.3); background: rgba(167, 139, 250, 0.05);">
                     <span class="stat-icon"><svg class="stat-svg" viewBox="0 0 24 24" style="stroke: var(--accent-violet);">
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12 6 12 12 16 14" />
+                             <circle cx="12" cy="12" r="10" />
+                             <polyline points="12 6 12 12 16 14" />
                         </svg></span>
                     <span class="stat-value" id="total-playtime-count" style="color: var(--accent-violet); font-weight: 800;">0h</span>
                 </div>
-                <div class="stat-chip" id="stat-avg-rating" title="Note moyenne">
+                <div class="stat-chip" id="stat-avg-rating" title="Note moyenne" data-i18n-title="title_rating">
                     <span class="stat-icon"><svg class="stat-svg" viewBox="0 0 24 24">
                             <polygon
                                 points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
@@ -132,16 +133,16 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button id="btn-add-game" class="btn-primary" aria-label="Ajouter un jeu">
+                <button id="btn-add-game" class="btn-primary" aria-label="Ajouter un jeu" data-i18n-aria-label="btn_add_game">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                         <line x1="9" y1="3" x2="9" y2="15" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" />
                         <line x1="3" y1="9" x2="15" y2="9" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" />
                     </svg>
-                    <span>Ajouter</span>
+                    <span data-i18n="btn_add">Ajouter</span>
                 </button>
-                <button id="btn-settings" class="btn-icon" aria-label="Paramètres" title="Paramètres & Sauvegarde">
+                <button id="btn-settings" class="btn-icon" aria-label="Paramètres" title="Paramètres & Sauvegarde" data-i18n-title="title_settings" data-i18n-aria-label="btn_settings">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                         <circle cx="9" cy="9" r="2.5" stroke="currentColor" stroke-width="1.5" />
                         <path
@@ -163,7 +164,7 @@
                 <div>
                     <div class="now-playing-badge">
                         <span class="pulse-dot"></span>
-                        EN COURS
+                        <span data-i18n="now_playing_badge">EN COURS</span>
                     </div>
                     <h2 id="now-playing-title" class="now-playing-title"></h2>
                     <p id="now-playing-platform" class="now-playing-platform"></p>
@@ -173,14 +174,14 @@
                     style="display: none; flex-direction: column; gap: 8px; flex: 1; max-width: 600px; margin: 0 40px;">
                     <div
                         style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: var(--text-secondary);">
-                        <span style="display:flex; align-items:center; gap:6px;"><svg class="panel-svg"
+                        <span style="display:flex; align-items:center; gap:6px;" id="now-playing-ach-title-span"><svg class="panel-svg"
                                 style="width:14px; height:14px;" viewBox="0 0 24 24">
                                 <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
                                 <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
                                 <path d="M4 22h16" />
                                 <path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34" />
                                 <path d="M12 2a6 6 0 0 1 6 6v3.5a6 6 0 0 1-12 0V8a6 6 0 0 1 6-6z" />
-                            </svg> Progression des succès</span>
+                            </svg> <span data-i18n="now_playing_ach_title">Progression des succès</span></span>
                         <span id="now-playing-ach-ratio">0/0</span>
                     </div>
                     <div class="progress-bar-bg"
@@ -194,24 +195,24 @@
                             viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10" />
                             <polyline points="12 6 12 12 16 14" />
-                        </svg> 0h jouées</div>
+                        </svg> <span id="now-playing-hours-text">0h jouées</span></div>
                 </div>
             </div>
             <div class="now-playing-actions">
-                <button id="btn-complete-current" class="btn-complete-current" aria-label="Marquer comme terminé">
+                <button id="btn-complete-current" class="btn-complete-current" aria-label="Marquer comme terminé" data-i18n-aria-label="now_playing_complete">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path d="M4 10L8 14L16 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
                             stroke-linejoin="round" />
                     </svg>
-                    Terminé !
+                    <span data-i18n="now_playing_complete">Terminé !</span>
                 </button>
-                <button id="btn-skip-current" class="btn-skip-secondary" aria-label="Passer ce jeu">
+                <button id="btn-skip-current" class="btn-skip-secondary" aria-label="Passer ce jeu" data-i18n-aria-label="now_playing_skip">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                         <path d="M4 4L14 9L4 14V4Z" fill="currentColor" />
                         <line x1="14" y1="4" x2="14" y2="14" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" />
                     </svg>
-                    Passer
+                    <span data-i18n="now_playing_skip">Passer</span>
                 </button>
             </div>
         </div>
@@ -229,7 +230,7 @@
                                 <circle cx="12" cy="12" r="6" />
                                 <circle cx="12" cy="12" r="2" />
                             </svg></span>
-                        À Jouer
+                        <span data-i18n="backlog_title">À Jouer</span>
                     </h2>
                     <span id="backlog-badge" class="panel-badge">0</span>
                 </div>
@@ -240,23 +241,23 @@
                             <line x1="11" y1="11" x2="14" y2="14" stroke="currentColor" stroke-width="1.5"
                                 stroke-linecap="round" />
                         </svg>
-                        <input type="text" id="backlog-search" class="search-input" placeholder="Filtrer..."
+                        <input type="text" id="backlog-search" class="search-input" placeholder="Filtrer..." data-i18n-placeholder="filter_placeholder"
                             aria-label="Filtrer le backlog">
                     </div>
                     <div class="sort-container">
-                        <button id="btn-sort-backlog" class="btn-icon" aria-label="Trier" title="Trier">
+                        <button id="btn-sort-backlog" class="btn-icon" aria-label="Trier" title="Trier" data-i18n-title="title_sort">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                 <path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.5"
                                     stroke-linecap="round" />
                             </svg>
                         </button>
                         <div id="menu-sort-backlog" class="sort-menu">
-                            <button class="sort-option active-sort" data-sort="newest">📅 Plus récent</button>
-                            <button class="sort-option" data-sort="oldest">📅 Plus ancien</button>
-                            <button class="sort-option" data-sort="alpha">🔤 A → Z</button>
-                            <button class="sort-option" data-sort="alpha-desc">🔤 Z → A</button>
-                            <button class="sort-option" data-sort="platform">🖥️ Par plateforme</button>
-                            <button class="sort-option" data-sort="genre">🎭 Par genre</button>
+                            <button class="sort-option active-sort" data-sort="newest"><span data-i18n="sort_newest">📅 Plus récent</span></button>
+                            <button class="sort-option" data-sort="oldest"><span data-i18n="sort_oldest">📅 Plus ancien</span></button>
+                            <button class="sort-option" data-sort="alpha"><span data-i18n="sort_az">🔤 A → Z</span></button>
+                            <button class="sort-option" data-sort="alpha-desc"><span data-i18n="sort_za">🔤 Z → A</span></button>
+                            <button class="sort-option" data-sort="platform"><span data-i18n="sort_platform">🖥️ Par plateforme</span></button>
+                            <button class="sort-option" data-sort="genre"><span data-i18n="sort_genre">🎭 Par genre</span></button>
                         </div>
                     </div>
                 </div>
@@ -270,8 +271,8 @@
                         <line x1="18" y1="11" x2="18.01" y2="11" />
                         <rect x="2" y="6" width="20" height="12" rx="3" />
                     </svg></div>
-                <p class="empty-title">Ton backlog est vide !</p>
-                <p class="empty-subtitle">Ajoute des jeux pour commencer ton aventure</p>
+                <p class="empty-title" data-i18n="backlog_empty_title">Ton backlog est vide !</p>
+                <p class="empty-subtitle" data-i18n="backlog_empty_subtitle">Ajoute des jeux pour commencer ton aventure</p>
             </div>
         </section>
 
@@ -287,7 +288,7 @@
                                 <path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34" />
                                 <path d="M12 2a6 6 0 0 1 6 6v3.5a6 6 0 0 1-12 0V8a6 6 0 0 1 6-6z" />
                             </svg></span>
-                        Terminés
+                        <span data-i18n="completed_title">Terminés</span>
                     </h2>
                     <span id="completed-badge" class="panel-badge completed-badge">0</span>
                 </div>
@@ -298,24 +299,24 @@
                             <line x1="11" y1="11" x2="14" y2="14" stroke="currentColor" stroke-width="1.5"
                                 stroke-linecap="round" />
                         </svg>
-                        <input type="text" id="completed-search" class="search-input" placeholder="Filtrer..."
+                        <input type="text" id="completed-search" class="search-input" placeholder="Filtrer..." data-i18n-placeholder="filter_placeholder"
                             aria-label="Filtrer les jeux terminés">
                     </div>
                     <div class="sort-container">
-                        <button id="btn-sort-completed" class="btn-icon" aria-label="Trier" title="Trier">
+                        <button id="btn-sort-completed" class="btn-icon" aria-label="Trier" title="Trier" data-i18n-title="title_sort">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                 <path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.5"
                                     stroke-linecap="round" />
                             </svg>
                         </button>
                         <div id="menu-sort-completed" class="sort-menu">
-                            <button class="sort-option active-sort" data-sort="newest">📅 Plus récent</button>
-                            <button class="sort-option" data-sort="oldest">📅 Plus ancien</button>
-                            <button class="sort-option" data-sort="alpha">🔤 A → Z</button>
-                            <button class="sort-option" data-sort="alpha-desc">🔤 Z → A</button>
-                            <button class="sort-option" data-sort="rating">⭐ Par note</button>
-                            <button class="sort-option" data-sort="platform">🖥️ Par plateforme</button>
-                            <button class="sort-option" data-sort="genre">🎭 Par genre</button>
+                            <button class="sort-option active-sort" data-sort="newest"><span data-i18n="sort_newest">📅 Plus récent</span></button>
+                            <button class="sort-option" data-sort="oldest"><span data-i18n="sort_oldest">📅 Plus ancien</span></button>
+                            <button class="sort-option" data-sort="alpha"><span data-i18n="sort_az">🔤 A → Z</span></button>
+                            <button class="sort-option" data-sort="alpha-desc"><span data-i18n="sort_za">🔤 Z → A</span></button>
+                            <button class="sort-option" data-sort="rating"><span data-i18n="sort_rating">⭐ Par note</span></button>
+                            <button class="sort-option" data-sort="platform"><span data-i18n="sort_platform">🖥️ Par plateforme</span></button>
+                            <button class="sort-option" data-sort="genre"><span data-i18n="sort_genre">🎭 Par genre</span></button>
                         </div>
                     </div>
                 </div>
@@ -326,8 +327,8 @@
                         <path
                             d="M12 3v4M12 17v4M3 12h4M17 12h4M5.64 5.64l2.83 2.83M15.53 15.53l2.83 2.83M5.64 17.36l2.83-2.83M15.53 8.47l2.83-2.83" />
                     </svg></div>
-                <p class="empty-title">Aucun jeu terminé</p>
-                <p class="empty-subtitle">Termine ton premier jeu pour débloquer cette section</p>
+                <p class="empty-title" data-i18n="completed_empty_title">Aucun jeu terminé</p>
+                <p class="empty-subtitle" data-i18n="completed_empty_subtitle">Termine ton premier jeu pour débloquer cette section</p>
             </div>
         </section>
     </main>
@@ -344,7 +345,7 @@
                         <line x1="11" y1="11" x2="14" y2="14" stroke="currentColor" stroke-width="1.5"
                             stroke-linecap="round" />
                     </svg>
-                    Rechercher un jeu
+                    <span data-i18n="modal_tab_search">Rechercher un jeu</span>
                 </button>
                 <button class="modal-tab" data-tab="scanner" id="tab-scanner">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -353,7 +354,7 @@
                             stroke-linecap="round" />
                         <line x1="8" y1="13" x2="8" y2="15" stroke="currentColor" stroke-width="1.5" />
                     </svg>
-                    Scanner PC
+                    <span data-i18n="modal_tab_scanner">Scanner PC</span>
                 </button>
             </div>
 
@@ -367,7 +368,7 @@
                                 stroke-linecap="round" />
                         </svg>
                         <input type="text" id="rawg-search-input" class="search-bar-input"
-                            placeholder="Rechercher un jeu... (ex: Zelda, Hollow Knight)" autocomplete="off">
+                            placeholder="Rechercher un jeu... (ex: Zelda, Hollow Knight)" data-i18n-placeholder="search_input_placeholder" autocomplete="off">
                         <div id="search-spinner" class="search-spinner" style="display:none;">
                             <div class="spinner-ring"></div>
                         </div>
@@ -376,20 +377,20 @@
                     <div class="search-filters">
                         <!-- Custom Sort Dropdown (Single Select) -->
                         <div class="custom-dropdown" id="dropdown-sort">
-                            <div class="custom-dropdown-btn">🔥 Populaire</div>
+                            <div class="custom-dropdown-btn" data-i18n="filter_popular">🔥 Populaire</div>
                             <div class="custom-dropdown-menu single-select">
                                 <label class="custom-dropdown-item"><input type="radio" name="sort" value="popularity"
-                                        checked><span>🔥 Populaire</span></label>
+                                        checked><span data-i18n="filter_popular">🔥 Populaire</span></label>
                                 <label class="custom-dropdown-item"><input type="radio" name="sort"
-                                        value="newest"><span>📅 Nouveautés</span></label>
+                                        value="newest"><span data-i18n="filter_newest">📅 Nouveautés</span></label>
                                 <label class="custom-dropdown-item"><input type="radio" name="sort"
-                                        value="rating"><span>⭐ Mieux notés</span></label>
+                                        value="rating"><span data-i18n="filter_best_rating">⭐ Mieux notés</span></label>
                             </div>
                         </div>
 
                         <!-- Custom Platform Dropdown (Multi Select) -->
                         <div class="custom-dropdown" id="dropdown-platform">
-                            <div class="custom-dropdown-btn">Toutes plateformes</div>
+                            <div class="custom-dropdown-btn" id="platform-btn-label" data-i18n="filter_all_platforms">Toutes plateformes</div>
                             <div class="custom-dropdown-menu multi-select">
                                 <label class="custom-dropdown-item"><input type="checkbox" value="6"><span>🖥️
                                         PC</span></label>
@@ -412,7 +413,7 @@
 
                         <!-- Custom Genre Dropdown (Multi Select) -->
                         <div class="custom-dropdown" id="dropdown-genre">
-                            <div class="custom-dropdown-btn">Tous genres</div>
+                            <div class="custom-dropdown-btn" id="genre-btn-label" data-i18n="filter_all_genres">Tous genres</div>
                             <div class="custom-dropdown-menu multi-select">
                                 <label class="custom-dropdown-item"><input type="checkbox"
                                         value="12"><span>RPG</span></label>
@@ -448,7 +449,7 @@
                                 <circle cx="11" cy="11" r="8" />
                                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
                             </svg></div>
-                        <p>Tape le nom d'un jeu pour lancer la recherche</p>
+                        <p data-i18n="search_start_desc">Tape le nom d'un jeu pour lancer la recherche</p>
                     </div>
                 </div>
             </div>
@@ -465,16 +466,15 @@
                                 <line x1="12" y1="17" x2="12" y2="21" />
                             </svg>
                         </div>
-                        <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 12px;">Scanner
-                            tes jeux installés</h3>
-                        <p
+                        <h3 data-i18n="scanner_title" style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 12px;">Scanner tes jeux installés</h3>
+                        <p data-i18n="scanner_desc"
                             style="color: var(--text-secondary); margin-bottom: 30px; font-size: 0.95rem; line-height: 1.5;">
                             Trouve automatiquement les jeux installés sur tes disques via Steam, Epic Games, Xbox, EA ou
                             Ubisoft et ajoute-les en un clic à ton Quest Log.
                         </p>
                         <button type="button" id="btn-open-scanner" class="btn-primary"
                             style="padding: 14px 28px; font-size: 1.05rem; box-shadow: var(--shadow-glow);">
-                            Lancer l'analyse du PC
+                            <span data-i18n="scanner_btn_scan">Lancer l'analyse du PC</span>
                         </button>
                     </div>
                 </div>
@@ -486,7 +486,7 @@
     <!-- ===== SETTINGS MODAL ===== -->
     <div id="settings-overlay" class="modal-overlay" aria-hidden="true">
         <div id="modal-settings" class="modal" role="dialog" aria-labelledby="settings-title" style="max-width: 650px;">
-            <button class="modal-close" data-close="settings-overlay" aria-label="Fermer">
+            <button class="modal-close" data-close="settings-overlay" aria-label="Fermer" data-i18n-aria-label="win_close">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                     <line x1="4" y1="4" x2="14" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     <line x1="14" y1="4" x2="4" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -499,7 +499,7 @@
                     <path
                         d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
                 </svg>
-                Paramètres
+                <span data-i18n="settings_title_text">Paramètres</span>
             </h2>
 
             <div class="settings-list">
@@ -513,16 +513,33 @@
                             <circle cx="11.5" cy="7.5" r="1.5" fill="currentColor" />
                             <circle cx="16.5" cy="9.5" r="1.5" fill="currentColor" />
                         </svg>
-                        Thème de l'application
+                        <span data-i18n="settings_theme_title">Thème de l'application</span>
                     </h3>
-                    <p class="settings-card-desc">Personnalise la couleur principale.</p>
+                    <p class="settings-card-desc" data-i18n="settings_theme_desc">Personnalise la couleur principale.</p>
                     <div class="theme-selector">
                         <button class="theme-btn theme-violet active" data-theme="violet"
-                            aria-label="Thème Violet"></button>
+                            aria-label="Thème Violet" data-i18n-aria-label="theme_violet"></button>
                         <button class="theme-btn theme-emerald" data-theme="emerald"
-                            aria-label="Thème Émeraude"></button>
-                        <button class="theme-btn theme-blue" data-theme="blue" aria-label="Thème Bleu"></button>
-                        <button class="theme-btn theme-rose" data-theme="rose" aria-label="Thème Rose"></button>
+                            aria-label="Thème Émeraude" data-i18n-aria-label="theme_emerald"></button>
+                        <button class="theme-btn theme-blue" data-theme="blue" aria-label="Thème Bleu" data-i18n-aria-label="theme_blue"></button>
+                        <button class="theme-btn theme-rose" data-theme="rose" aria-label="Thème Rose" data-i18n-aria-label="theme_rose"></button>
+                    </div>
+                </div>
+                
+                <!-- Language Section -->
+                <div class="settings-card">
+                    <h3 class="settings-card-title">
+                        <svg class="icon-inline" viewBox="0 0 24 24" style="width:18px; height:18px; fill: none; stroke: currentColor; stroke-width: 2;">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="2" y1="12" x2="22" y2="12"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                        <span data-i18n="settings_lang_title">Langue de l'application</span>
+                    </h3>
+                    <p class="settings-card-desc" data-i18n="settings_lang_desc">Choisis la langue d'affichage.</p>
+                    <div style="display: flex; gap: 8px; margin-top: 10px;">
+                        <button id="btn-lang-fr" class="btn-secondary btn-sm lang-btn" style="border-radius: var(--radius-sm); padding: 8px 16px; font-weight: 700;">Français</button>
+                        <button id="btn-lang-en" class="btn-secondary btn-sm lang-btn" style="border-radius: var(--radius-sm); padding: 8px 16px; font-weight: 700;">English</button>
                     </div>
                 </div>
 
@@ -534,13 +551,12 @@
                             <path
                                 d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
                         </svg>
-                        Options Générales
+                        <span data-i18n="settings_general_title">Options Générales</span>
                     </h3>
-                    <p class="settings-card-desc">Démarrage et comportement de la fenêtre.</p>
+                    <p class="settings-card-desc" data-i18n="settings_general_desc">Démarrage et comportement de la fenêtre.</p>
                     <div style="display: flex; flex-direction: column; gap: var(--space-md);">
                         <label class="switch-container" style="margin: 0;">
-                            <span class="switch-label" style="color: var(--text-secondary);">Démarrer avec
-                                Windows</span>
+                            <span class="switch-label" style="color: var(--text-secondary);" data-i18n="settings_autolaunch">Démarrer avec Windows</span>
                             <span class="switch">
                                 <input type="checkbox" id="chk-auto-launch">
                                 <span class="slider"></span>
@@ -548,9 +564,8 @@
                         </label>
                         <div class="switch-container"
                             style="border-top: 1px solid rgba(255,255,255,0.03); padding-top: 12px;">
-                            <span class="switch-label" style="color: var(--text-secondary);">Fermer dans la zone de
-                                notification (Tray)</span>
-                            <span
+                            <span class="switch-label" style="color: var(--text-secondary);" data-i18n="settings_tray">Fermer dans la zone de notification (Tray)</span>
+                            <span data-i18n="settings_enabled"
                                 style="color: var(--accent-violet); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">Activé</span>
                         </div>
                     </div>
@@ -564,65 +579,34 @@
                                 d="M18 10h-1.5a3 3 0 0 0-3-3h-3a3 3 0 0 0-3 3H6a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h1.5a3 3 0 0 0 3-3h3a3 3 0 0 0 3 3H18a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2z" />
                             <path d="M2 14h2M20 14h2M12 2v5M12 17v5" />
                         </svg>
-                        Intégration Steam
+                        <span data-i18n="settings_steam_title">Intégration Steam</span>
                     </h3>
-                    <p class="settings-card-desc">Lie ton compte Steam en saisissant simplement ton pseudo ou ton
-                        adresse de profil.</p>
+                    <p class="settings-card-desc" data-i18n="settings_steam_desc">Lie ton compte Steam en saisissant simplement ton pseudo ou ton adresse de profil.</p>
 
                     <div class="form-group-settings" style="margin-bottom: var(--space-md);">
-                        <label for="steam-profile-input" class="form-label-settings">Profil Steam</label>
+                        <label for="steam-profile-input" class="form-label-settings" data-i18n="settings_steam_profile">Profil Steam</label>
                         <input type="text" id="steam-profile-input" class="form-input-settings"
-                            placeholder="Pseudo Steam, ID64, ou URL de ton profil...">
-                        <span class="form-hint-block"
-                            style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 4px;">Exemples :
-                            76561198151176470, weeever1, ou l'adresse complète. Ton profil doit être public.</span>
+                            placeholder="Pseudo Steam, ID64, ou URL de ton profil..." data-i18n-placeholder="settings_steam_placeholder">
+                        <span class="form-hint-block" id="steam-hint-block"
+                            style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 4px;">Exemples : 76561198151176470, weeever1, ou l'adresse complète. Ton profil doit être public.</span>
                     </div>
 
                     <details style="margin-bottom: var(--space-md); cursor: pointer;">
                         <summary
                             style="font-size: 0.72rem; color: var(--text-tertiary); font-weight: 600; outline: none; user-select: none;">
-                            Options avancées (Clé API)</summary>
+                            <span data-i18n="settings_steam_advanced">Options avancées (Clé API)</span></summary>
                         <div class="form-group-settings" style="margin-top: 8px;">
-                            <label for="steam-api-key" class="form-label-settings">Clé API Steam (Optionnelle)</label>
+                            <label for="steam-api-key" class="form-label-settings" data-i18n="settings_steam_apikey">Clé API Steam (Optionnelle)</label>
                             <input type="password" id="steam-api-key" class="form-input-settings"
-                                placeholder="Laisser vide pour utiliser la clé par défaut de Quest Log...">
+                                placeholder="Laisser vide pour utiliser la clé par défaut de Quest Log..." data-i18n-placeholder="settings_steam_apikey_placeholder">
                         </div>
                     </details>
 
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
                         <button id="btn-save-steam-config" class="btn-primary btn-sm"
-                            style="border-radius: var(--radius-sm); padding: 8px 16px;">Lier le compte</button>
+                            style="border-radius: var(--radius-sm); padding: 8px 16px;" data-i18n="settings_steam_btn">Lier le compte</button>
                         <span id="steam-status-label"
-                            style="font-size: 0.8rem; font-weight: 600; color: var(--text-tertiary);">Non
-                            connecté</span>
-                    </div>
-                </div>
-
-                <!-- Discord RPC Section -->
-                <div class="settings-card">
-                    <h3 class="settings-card-title">
-                        <svg class="icon-inline" viewBox="0 0 24 24" style="width:18px; height:18px; fill: currentColor;">
-                            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.873-.894.077.077 0 0 1-.008-.128c.126-.093.252-.19.372-.287a.075.075 0 0 1 .077-.011c3.92 1.793 8.18 1.793 12.061 0a.073.073 0 0 1 .078.009c.12.099.246.195.373.289a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107 14.36 14.36 0 0 0 1.224 1.99.076.076 0 0 0 .084.03 19.86 19.86 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.156-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.156 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.156-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.156 2.418z"/>
-                        </svg>
-                        Discord Rich Presence
-                    </h3>
-                    <p class="settings-card-desc">Personnalise l'intégration Discord Rich Presence pour afficher ton statut en jeu.</p>
-                    
-                    <div class="form-group-settings" style="margin-bottom: var(--space-md);">
-                        <label for="discord-client-id-input" class="form-label-settings">Identifiant de l'Application Discord (Client ID)</label>
-                        <input type="text" id="discord-client-id-input" class="form-input-settings"
-                            placeholder="Ex: 1258832042106093618 ou un autre ID valide...">
-                        <span class="form-hint-block"
-                            style="font-size: 0.72rem; color: var(--text-tertiary); margin-top: 4px;">
-                            Par défaut, Quest Log utilise son ID universel. Si la connexion échoue, saisis le Client ID de ton application créée sur le <a href="https://discord.com/developers/applications" target="_blank" style="color: var(--accent-violet); text-decoration: underline;">Portail Développeur Discord</a>.
-                        </span>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-                        <button id="btn-save-discord-rpc" class="btn-primary btn-sm"
-                            style="border-radius: var(--radius-sm); padding: 8px 16px;">Enregistrer le Client ID</button>
-                        <span id="discord-status-label"
-                            style="font-size: 0.8rem; font-weight: 600; color: var(--text-tertiary);">Non connecté</span>
+                            style="font-size: 0.8rem; font-weight: 600; color: var(--text-tertiary);" data-i18n="settings_steam_status_unlinked">Non connecté</span>
                     </div>
                 </div>
 
@@ -634,15 +618,14 @@
                             <polyline points="17 21 17 13 7 13 7 21" />
                             <polyline points="7 3 7 8 15 8" />
                         </svg>
-                        Sauvegarde Locale
+                        <span data-i18n="settings_save_title">Sauvegarde Locale</span>
                     </h3>
-                    <p class="settings-card-desc">Les données sont automatiquement enregistrées. Tu peux exporter ou
-                        importer des sauvegardes manuelles.</p>
+                    <p class="settings-card-desc" data-i18n="settings_save_desc">Les données sont automatiquement enregistrées. Tu peux exporter ou importer des sauvegardes manuelles.</p>
                     <div class="settings-buttons-row">
                         <button id="btn-export-data" class="btn-secondary btn-sm"
-                            style="border-radius: var(--radius-sm);">Exporter .json</button>
+                            style="border-radius: var(--radius-sm);" data-i18n="settings_save_export">Exporter .json</button>
                         <button id="btn-import-data" class="btn-secondary btn-sm"
-                            style="border-radius: var(--radius-sm);">Importer .json</button>
+                            style="border-radius: var(--radius-sm);" data-i18n="settings_save_import">Importer .json</button>
                     </div>
                     <input type="file" id="import-file-input" accept=".json" style="display:none;">
                 </div>
@@ -653,14 +636,14 @@
                         <svg class="icon-inline" viewBox="0 0 24 24" style="width:18px; height:18px; fill: none; stroke: currentColor; stroke-width: 2;">
                             <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
                         </svg>
-                        Mises à Jour
+                        <span data-i18n="settings_update_title">Mises à Jour</span>
                     </h3>
-                    <p class="settings-card-desc">Recherche les dernières mises à jour du tracker Quest Log.</p>
+                    <p class="settings-card-desc" data-i18n="settings_update_desc">Recherche les dernières mises à jour du tracker Quest Log.</p>
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px;">
                         <button id="btn-check-updates" class="btn-primary btn-sm"
-                            style="border-radius: var(--radius-sm); padding: 8px 16px;">Vérifier les mises à jour</button>
+                            style="border-radius: var(--radius-sm); padding: 8px 16px;"><span data-i18n="settings_update_btn">Vérifier les mises à jour</span></button>
                         <span id="update-status-label"
-                            style="font-size: 0.8rem; font-weight: 600; color: var(--text-tertiary);">Prêt</span>
+                            style="font-size: 0.8rem; font-weight: 600; color: var(--text-tertiary);" data-i18n="settings_update_status_ready">Prêt</span>
                     </div>
                 </div>
 
@@ -673,13 +656,12 @@
                             <line x1="12" y1="9" x2="12" y2="13" />
                             <line x1="12" y1="17" x2="12.01" y2="17" />
                         </svg>
-                        Zone de Danger
+                        <span data-i18n="settings_danger_title">Zone de Danger</span>
                     </h3>
-                    <p class="settings-card-desc" style="color: var(--text-secondary); margin-bottom: var(--space-md);">
+                    <p class="settings-card-desc" style="color: var(--text-secondary); margin-bottom: var(--space-md);" data-i18n="settings_danger_desc">
                         Efface définitivement toutes les données de ton Quest Log (Jeux, Niveaux, Progression).</p>
                     <button id="btn-clear-all-data" class="btn-danger btn-sm"
-                        style="border-radius: var(--radius-sm); border-color: rgba(248, 113, 113, 0.3);">Réinitialiser
-                        l'application</button>
+                        style="border-radius: var(--radius-sm); border-color: rgba(248, 113, 113, 0.3);" data-i18n="settings_danger_btn">Réinitialiser l'application</button>
                 </div>
             </div>
         </div>
@@ -688,7 +670,7 @@
     <!-- ===== GAME DETAILS MODAL ===== -->
     <div id="details-overlay" class="modal-overlay" aria-hidden="true">
         <div id="modal-details" class="modal modal-details" role="dialog" aria-labelledby="details-title">
-            <button class="modal-close" data-close="details-overlay" aria-label="Fermer">
+            <button class="modal-close" data-close="details-overlay" aria-label="Fermer" data-i18n-aria-label="win_close">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                     <line x1="4" y1="4" x2="14" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     <line x1="14" y1="4" x2="4" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -717,17 +699,17 @@
                     </div>
 
                     <div class="details-notes-block" id="details-notes-block" style="display:none;">
-                        <h4 class="details-subtitle">Notes</h4>
+                        <h4 class="details-subtitle" data-i18n="details_notes_subtitle">Notes</h4>
                         <p class="details-notes-text" id="details-notes-text"></p>
                     </div>
 
                     <!-- Launch Section -->
                     <div class="details-notes-block" id="details-launcher-block"
                         style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
-                        <h4 class="details-subtitle">Lancement</h4>
+                        <h4 class="details-subtitle" data-i18n="details_launch_subtitle">Lancement</h4>
                         <button id="btn-play-game" class="btn-primary btn-full"
                             style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; font-weight: 700;">
-                            <span>▶️ Lancer le jeu</span>
+                            <span id="btn-play-text">▶️ Lancer le jeu</span>
                         </button>
                     </div>
 
@@ -735,13 +717,12 @@
                     <div class="details-notes-block" id="details-exe-block"
                         style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
                         <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1;">
-                            <h4 class="details-subtitle" style="margin: 0;">Fichier Exécutable (.exe)</h4>
-                            <span id="launcher-status"
-                                style="font-size: 0.75rem; color: var(--text-tertiary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 250px;">Aucun
-                                exécutable lié</span>
+                            <h4 class="details-subtitle" style="margin: 0;" data-i18n="details_exe_subtitle">Fichier Exécutable (.exe)</h4>
+                            <span id="launcher-status" data-i18n="details_exe_unlinked"
+                                style="font-size: 0.75rem; color: var(--text-tertiary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 250px;">Aucun exécutable lié</span>
                         </div>
                         <button id="btn-select-exe" class="btn-secondary btn-sm"
-                            style="padding: 6px 12px; font-weight: 600;">Lier un .exe</button>
+                            style="padding: 6px 12px; font-weight: 600;" data-i18n="details_exe_btn">Lier un .exe</button>
                     </div>
 
                     <!-- Achievements list -->
@@ -750,7 +731,7 @@
                         <div
                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                             <h4 class="details-subtitle"
-                                style="margin: 0; display: flex; align-items: center; gap: 6px;">
+                                style="margin: 0; display: flex; align-items: center; gap: 6px;" id="details-achievements-title-label">
                                 <svg class="panel-svg" style="width:16px; height:16px;" viewBox="0 0 24 24">
                                     <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
                                     <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
@@ -758,7 +739,7 @@
                                     <path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34" />
                                     <path d="M12 2a6 6 0 0 1 6 6v3.5a6 6 0 0 1-12 0V8a6 6 0 0 1 6-6z" />
                                 </svg>
-                                Succès
+                                <span data-i18n="details_achievements_title">Succès</span>
                             </h4>
                             <span id="achievements-ratio"
                                 style="font-size: 0.8rem; font-weight: 700; color: var(--accent-violet);">0 / 0</span>
@@ -773,8 +754,8 @@
 
             <div class="details-actions"
                 style="border-top: 1px solid var(--bg-glass-border); padding-top: var(--space-md); margin-top: 0; padding-bottom: var(--space-lg);">
-                <button id="btn-details-complete" class="btn-primary" style="display:none;">Terminer ce jeu</button>
-                <button id="btn-details-delete" class="btn-danger">Supprimer</button>
+                <button id="btn-details-complete" class="btn-primary" style="display:none;" data-i18n="details_complete_btn">Terminer ce jeu</button>
+                <button id="btn-details-delete" class="btn-danger" data-i18n="details_delete_btn">Supprimer</button>
             </div>
         </div>
     </div>
@@ -783,9 +764,9 @@
     <div id="rating-overlay" class="modal-overlay" aria-hidden="true">
         <div id="modal-rating" class="modal modal-rating" role="dialog" aria-labelledby="rating-modal-title">
             <div class="rating-celebration" id="rating-celebration">🎉</div>
-            <h2 id="rating-modal-title" class="modal-title">Bravo !</h2>
+            <h2 id="rating-modal-title" class="modal-title" data-i18n="rating_celebration_title">Bravo !</h2>
             <p id="rating-game-name" class="rating-game-name"></p>
-            <p class="rating-subtitle">Comment tu as trouvé ce jeu ?</p>
+            <p class="rating-subtitle" data-i18n="rating_celebration_subtitle">Comment tu as trouvé ce jeu ?</p>
             <div id="star-rating" class="star-rating" role="radiogroup">
                 <button class="star" data-value="1">★</button>
                 <button class="star" data-value="2">★</button>
@@ -794,38 +775,103 @@
                 <button class="star" data-value="5">★</button>
             </div>
             <div class="rating-labels">
-                <span>Bof</span>
-                <span>Chef-d'œuvre</span>
+                <span data-i18n="rating_label_bad">Bof</span>
+                <span data-i18n="rating_label_good">Chef-d'œuvre</span>
             </div>
             <div class="form-row" style="margin-top: 1rem;">
                 <div class="form-group" style="flex: 2;">
-                    <label for="rating-comment" class="form-label" style="text-align:left;">Commentaire <span
-                            class="form-hint">(optionnel)</span></label>
-                    <input type="text" id="rating-comment" class="form-input" placeholder="Avis rapide...">
+                    <label for="rating-comment" class="form-label" style="text-align:left;"><span data-i18n="rating_comment_label">Commentaire</span></label>
+                    <input type="text" id="rating-comment" class="form-input" placeholder="Avis rapide..." data-i18n-placeholder="rating_review_placeholder">
                 </div>
                 <div class="form-group" style="flex: 1;">
-                    <label for="rating-playtime" class="form-label" style="text-align:left;">Temps de jeu <span
-                            class="form-hint">(h)</span></label>
-                    <input type="number" id="rating-playtime" class="form-input" placeholder="ex: 45" min="0" max="999">
+                    <label for="rating-playtime" class="form-label" style="text-align:left;"><span data-i18n="rating_playtime_label">Temps de jeu</span></label>
+                    <input type="number" id="rating-playtime" class="form-input" placeholder="ex: 45" min="0" max="999" data-i18n-placeholder="rating_playtime_placeholder">
                 </div>
             </div>
-            <button id="btn-submit-rating" class="btn-primary btn-full" style="margin-top: 1rem;" disabled>Valider la
-                note</button>
+            <button id="btn-submit-rating" class="btn-primary btn-full" style="margin-top: 1rem;" disabled data-i18n="rating_submit_btn">Valider la note</button>
         </div>
     </div>
 
     <!-- ===== RANDOM PICK OVERLAY ===== -->
-    <div id="random-pick-overlay" class="random-pick-overlay" aria-hidden="true">
-        <div class="random-pick-container">
-            <div class="random-pick-wheel" id="random-pick-wheel">
-                <div class="wheel-spinner"></div>
+    <div id="random-pick-overlay" class="random-pick-overlay" aria-hidden="true" style="z-index: 9999;">
+        <div class="random-pick-container" style="max-width: 460px; width: 90%; background: var(--bg-secondary); border: 1px solid rgba(167, 139, 250, 0.25); border-radius: var(--radius-lg); padding: 32px; box-shadow: 0 0 40px rgba(167, 139, 250, 0.15), var(--shadow-lg); backdrop-filter: blur(20px); text-align: center; overflow: hidden; position: relative;">
+            
+            <h3 style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 1px;" data-i18n="destiny_title">SÉLECTION DE QUÊTE</h3>
+
+            <!-- Roulette Viewport -->
+            <div id="random-pick-roulette" style="width: 100%; height: 100px; overflow: hidden; position: relative; border: 1.5px solid rgba(167, 139, 250, 0.25); border-radius: var(--radius-md); background: rgba(10, 10, 15, 0.8); margin: 0 auto 28px auto; box-shadow: inset 0 0 15px rgba(0,0,0,0.8);">
+                <!-- Visée centrale -->
+                <div style="position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent-pink), transparent); top: 50%; transform: translateY(-50%); z-index: 10; box-shadow: 0 0 10px var(--accent-pink);"></div>
+                <div style="position: absolute; left: 4px; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 8px solid var(--accent-pink); z-index: 10; filter: drop-shadow(0 0 3px var(--accent-pink));"></div>
+                <div style="position: absolute; right: 4px; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-right: 8px solid var(--accent-pink); z-index: 10; filter: drop-shadow(0 0 3px var(--accent-pink));"></div>
+                
+                <!-- Piste de défilement (H. d'item = 80px) -->
+                <div id="roulette-track" style="position: absolute; top: 0; width: 100%; display: flex; flex-direction: column; align-items: center; transform: translateY(0); pointer-events: none;">
+                    <!-- Rempli dynamiquement en JS -->
+                </div>
             </div>
-            <div class="random-pick-result" id="random-pick-result">
-                <p class="random-pick-label">Le destin a choisi...</p>
-                <h2 class="random-pick-name" id="random-pick-name"></h2>
-                <p class="random-pick-platform" id="random-pick-platform"></p>
-                <div class="random-pick-cover" id="random-pick-cover"></div>
-                <button id="btn-accept-pick" class="btn-primary btn-glow">C'est parti !</button>
+
+            <div class="random-pick-result" id="random-pick-result" style="display: none; flex-direction: column; align-items: center; animation: slideUpFade 0.4s ease forwards;">
+                <p class="random-pick-label" style="font-size: 0.82rem; font-weight: 700; color: var(--accent-pink); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;" data-i18n="destiny_chosen">Le Destin a Choisi...</p>
+                <h2 class="random-pick-name" id="random-pick-name" style="font-family: var(--font-display); font-size: 2rem; font-weight: 900; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; line-height: 1.2;"></h2>
+                <p class="random-pick-platform" id="random-pick-platform" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;"></p>
+                <div class="random-pick-cover" id="random-pick-cover" style="width: 140px; height: 190px; border-radius: var(--radius-md); background-size: cover; background-position: center; border: 1.5px solid rgba(255,255,255,0.08); box-shadow: var(--shadow-glow); margin-bottom: 24px;"></div>
+                <button id="btn-accept-pick" class="btn-primary" style="padding: 12px 32px; font-weight: 700; background: var(--gradient-primary); box-shadow: var(--shadow-glow); border: none; color: white; cursor: pointer; border-radius: var(--radius-md); width: 100%;" data-i18n="destiny_btn">C'est parti ! ⚔️</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SESSION RECAP OVERLAY ===== -->
+    <div id="session-recap-overlay" class="modal-overlay" aria-hidden="true" style="z-index: 9999;">
+        <div class="modal" style="max-width: 480px; width: 90%; padding: var(--space-xl); background: var(--bg-secondary); border: 1.5px solid rgba(167,139,250,0.25); box-shadow: 0 0 50px rgba(167,139,250,0.18), var(--shadow-xl); overflow: hidden; position: relative;">
+            <div class="game-connected-glow" style="opacity: 0.15;"></div>
+            
+            <h2 id="recap-title" style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 900; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 1.5px;" data-i18n="quest_report">Rapport de Quête</h2>
+            
+            <div class="recap-body" style="display: flex; flex-direction: column; gap: var(--space-lg);">
+                <!-- Game Info Row -->
+                <div class="recap-item" style="display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.03); padding: 12px 18px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.04);">
+                    <div id="recap-game-cover" style="width: 50px; height: 70px; border-radius: 4px; background-size: cover; background-position: top center; border: 1px solid rgba(255,255,255,0.08); flex-shrink: 0;"></div>
+                    <div style="overflow: hidden; text-align: left;">
+                        <h3 id="recap-game-name" style="font-size: 1.15rem; font-weight: 800; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;"></h3>
+                        <p id="recap-game-meta" style="font-size: 0.78rem; color: var(--text-tertiary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;"></p>
+                    </div>
+                </div>
+
+                <!-- Stats Grid (Time, XP, Gold) -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                    <div class="recap-item" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03); border-radius: var(--radius-md); padding: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                        <span style="font-size: 1.4rem;">⏱️</span>
+                        <div style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-tertiary); font-weight: 700;" data-i18n="recap_stat_time_label">Temps</div>
+                        <div id="recap-stat-time" style="font-size: 1.05rem; font-weight: 800; color: white;">0 min</div>
+                    </div>
+                    <div class="recap-item" style="background: rgba(167,139,250,0.05); border: 1px solid rgba(167,139,250,0.12); border-radius: var(--radius-md); padding: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                        <span style="font-size: 1.4rem; filter: drop-shadow(0 0 5px rgba(167,139,250,0.5));">⭐</span>
+                        <div style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-violet); font-weight: 700;" data-i18n="xp_gained">XP Gagné</div>
+                        <div id="recap-stat-xp" style="font-size: 1.05rem; font-weight: 800; color: var(--accent-violet);">+0 XP</div>
+                    </div>
+                    <div class="recap-item" style="background: rgba(251,191,36,0.05); border: 1px solid rgba(251,191,36,0.12); border-radius: var(--radius-md); padding: 14px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                        <span style="font-size: 1.4rem; filter: drop-shadow(0 0 5px rgba(251,191,36,0.5));">🪙</span>
+                        <div style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-amber); font-weight: 700;" data-i18n="gold_gained">Or Obtenu</div>
+                        <div id="recap-stat-gold" style="font-size: 1.05rem; font-weight: 800; color: var(--accent-amber);">+0</div>
+                    </div>
+                </div>
+
+                <!-- Level Up Banner -->
+                <div id="recap-level-up-banner" class="recap-item" style="display: none; background: linear-gradient(135deg, rgba(236,72,153,0.15), rgba(167,139,250,0.15)); border: 1.5px solid var(--accent-pink); border-radius: var(--radius-md); padding: 14px; text-align: center; position: relative;">
+                    <div style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 900; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px;" data-i18n="lvl_up">LEVEL UP !</div>
+                    <div id="recap-new-level" style="font-size: 0.9rem; font-weight: 700; color: white; margin-top: 2px;">Nouveau niveau atteint : 2</div>
+                </div>
+
+                <!-- Achievements Unlocked list -->
+                <div id="recap-achievements-section" class="recap-item" style="display: flex; flex-direction: column; gap: 8px;">
+                    <h4 id="recap-ach-title" style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;" data-i18n="ach_unlocked">Succès Débloqués</h4>
+                    <div id="recap-achievements-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; padding-right: 4px;">
+                        <!-- Insérés dynamiquement -->
+                    </div>
+                </div>
+                
+                <button id="btn-session-recap-confirm" class="btn-primary recap-item" style="width: 100%; padding: 14px; font-weight: 700; font-size: 0.95rem; background: var(--gradient-primary); box-shadow: var(--shadow-glow); border: none; border-radius: var(--radius-md); margin-top: 10px; cursor: pointer;" data-i18n="btn_continue">Continuer</button>
             </div>
         </div>
     </div>
@@ -833,12 +879,12 @@
     <!-- ===== CUSTOM CONFIRM MODAL ===== -->
     <div id="confirm-overlay" class="modal-overlay" aria-hidden="true" style="z-index: 9999;">
         <div id="modal-confirm" class="modal modal-small" role="dialog" aria-labelledby="confirm-title">
-            <h3 id="confirm-title" class="modal-title">Confirmation</h3>
+            <h3 id="confirm-title" class="modal-title" data-i18n="confirm_title">Confirmation</h3>
             <p id="confirm-message" class="confirm-message" style="margin-bottom: 20px; color: var(--text-secondary);">
             </p>
             <div class="settings-buttons">
-                <button id="btn-confirm-cancel" class="btn-secondary">Annuler</button>
-                <button id="btn-confirm-ok" class="btn-danger">Confirmer</button>
+                <button id="btn-confirm-cancel" class="btn-secondary" data-i18n="confirm_btn_cancel">Annuler</button>
+                <button id="btn-confirm-ok" class="btn-danger" data-i18n="confirm_btn_ok">Confirmer</button>
             </div>
         </div>
     </div>
@@ -846,14 +892,14 @@
     <!-- ===== CUSTOM PROMPT MODAL ===== -->
     <div id="prompt-overlay" class="modal-overlay" aria-hidden="true" style="z-index: 9999;">
         <div id="modal-prompt" class="modal modal-small" role="dialog" aria-labelledby="prompt-title">
-            <h3 id="prompt-title" class="modal-title">Liaison Steam</h3>
+            <h3 id="prompt-title" class="modal-title" data-i18n="prompt_title">Liaison Steam</h3>
             <p id="prompt-message" class="confirm-message" style="margin-bottom: 12px; color: var(--text-secondary);">
             </p>
             <input type="number" id="prompt-input" class="form-input" style="margin-bottom: 20px; text-align: center;"
-                placeholder="Exemple: 1145360">
+                placeholder="Exemple: 1145360" data-i18n-placeholder="prompt_input_placeholder">
             <div class="settings-buttons">
-                <button id="btn-prompt-cancel" class="btn-secondary">Passer</button>
-                <button id="btn-prompt-ok" class="btn-primary">Lier</button>
+                <button id="btn-prompt-cancel" class="btn-secondary" data-i18n="prompt_btn_skip">Passer</button>
+                <button id="btn-prompt-ok" class="btn-primary" data-i18n="prompt_btn_ok">Lier</button>
             </div>
         </div>
     </div>
@@ -861,7 +907,7 @@
     <!-- ===== PC SCANNER MODAL ===== -->
     <div id="scanner-overlay" class="modal-overlay" aria-hidden="true" style="z-index: 9998;">
         <div id="modal-scanner" class="modal modal-large" role="dialog" aria-labelledby="scanner-title">
-            <button class="modal-close" data-close="scanner-overlay" aria-label="Fermer">
+            <button class="modal-close" data-close="scanner-overlay" aria-label="Fermer" data-i18n-aria-label="win_close">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                     <line x1="4" y1="4" x2="14" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                     <line x1="14" y1="4" x2="4" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -873,14 +919,13 @@
                     <line x1="8" y1="21" x2="16" y2="21" />
                     <line x1="12" y1="17" x2="12" y2="21" />
                 </svg>
-                Scanner de jeux locaux
+                <span data-i18n="scanner_modal_title">Scanner de jeux locaux</span>
             </h2>
-            <p class="modal-subtitle" style="margin-bottom: 16px; color: var(--text-secondary);">Sélectionne les jeux
-                trouvés sur ton PC à ajouter au backlog.</p>
+            <p class="modal-subtitle" style="margin-bottom: 16px; color: var(--text-secondary);" data-i18n="scanner_modal_subtitle">Sélectionne les jeux trouvés sur ton PC à ajouter au backlog.</p>
 
             <div id="scanner-loading" class="scanner-loading" style="display:none; text-align:center; padding: 40px;">
                 <div class="spinner-ring" style="margin: 0 auto 16px;"></div>
-                <p>Recherche en cours dans les dossiers Steam, Epic, Xbox, EA...</p>
+                <p data-i18n="scanner_loading_text">Recherche en cours dans les dossiers Steam, Epic, Xbox, EA...</p>
             </div>
 
             <div id="scanner-results" class="scanner-results"
@@ -889,8 +934,8 @@
             </div>
 
             <div id="scanner-actions" class="scanner-actions" style="display: none; gap: 12px;">
-                <button id="btn-scanner-select-all" class="btn-ghost" style="flex:1;">Tout sélectionner</button>
-                <button id="btn-scanner-add" class="btn-primary" style="flex:2;" disabled>Ajouter la sélection</button>
+                <button id="btn-scanner-select-all" class="btn-ghost" style="flex:1;" data-i18n="scanner_btn_select_all">Tout sélectionner</button>
+                <button id="btn-scanner-add" class="btn-primary" style="flex:2;" disabled data-i18n="scanner_btn_add">Ajouter la sélection</button>
             </div>
         </div>
     </div>
@@ -901,13 +946,13 @@
             <div class="game-connected-glow"></div>
             <div class="game-connected-header">
                 <span class="pulse-dot active" style="margin-right: 4px; display: inline-block;"></span>
-                Quest Log Link Active
+                <span data-i18n="overlay_connection_title">Quest Log Link Active</span>
             </div>
             <div class="game-connected-body">
                 <div class="game-connected-cover" id="connected-game-cover"></div>
                 <div class="game-connected-info">
                     <h3 id="connected-game-name"></h3>
-                    <p>Suivi en arrière-plan actif • 🪙 +1/min</p>
+                    <p data-i18n="overlay_connection_desc">Suivi en arrière-plan actif • 🪙 +1/min</p>
                 </div>
             </div>
         </div>
@@ -927,45 +972,42 @@
                     <line x1="22" y1="7" x2="22" y2="10" stroke="url(#logo-grad2)" stroke-width="2" stroke-linecap="round"/>
                 </svg>
             </div>
-            <h2 class="profile-title modal-title" style="margin-bottom: 8px; font-size: 1.8rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Démarrer ton Aventure</h2>
-            <p class="profile-desc" style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--space-xl); line-height: 1.5;">Crée ton profil d'aventurier Quest Log pour commencer à accumuler de l'XP et des pièces d'or !</p>
+            <h2 class="profile-title modal-title" style="margin-bottom: 8px; font-size: 1.8rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" data-i18n="first_launch_title">Démarrer ton Aventure</h2>
+            <p class="profile-desc" style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--space-xl); line-height: 1.5;" data-i18n="first_launch_desc">Crée ton profil d'aventurier Quest Log pour commencer à accumuler de l'XP et des pièces d'or !</p>
             
             <form id="form-profile-creation" class="profile-form modal-form" style="text-align: left; gap: var(--space-lg);">
                 <div class="form-group">
-                    <label for="profile-creation-username" class="form-label" style="color: var(--accent-violet);">Nom de l'aventurier</label>
-                    <input type="text" id="profile-creation-username" class="form-input" style="font-size: 1rem; padding: 14px 18px; text-align: center; font-weight: 700; border-color: rgba(167,139,250,0.3); outline: none; transition: 0.3s;" placeholder="Saisis ton pseudo..." required minlength="2" maxlength="15" autocomplete="off">
+                    <label for="profile-creation-username" class="form-label" style="color: var(--accent-violet);" data-i18n="first_launch_username">Nom de l'aventurier</label>
+                    <input type="text" id="profile-creation-username" class="form-input" style="font-size: 1rem; padding: 14px 18px; text-align: center; font-weight: 700; border-color: rgba(167,139,250,0.3); outline: none; transition: 0.3s;" placeholder="Saisis ton pseudo..." data-i18n-placeholder="first_launch_placeholder" required minlength="2" maxlength="15" autocomplete="off">
                 </div>
-                <button type="submit" id="btn-create-profile" class="btn-primary btn-full btn-shimmer" style="padding: 14px; font-size: 1rem; font-weight: 700; box-shadow: var(--shadow-glow);">Commencer la Quête</button>
+                <button type="submit" id="btn-create-profile" class="btn-primary btn-full btn-shimmer" style="padding: 14px; font-size: 1rem; font-weight: 700; box-shadow: var(--shadow-glow);" data-i18n="first_launch_btn">Commencer la Quête</button>
             </form>
         </div>
     </div>
 
     <!-- ===== CHANGELOG MODAL ===== -->
     <div id="changelog-overlay" class="modal-overlay" aria-hidden="true" style="z-index: 9998;">
-        <div id="modal-changelog" class="modal" role="dialog" aria-labelledby="changelog-modal-title" style="max-width: 550px; padding: 24px;">
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(167, 139, 250, 0.15); border: 1px solid var(--accent-violet); display: flex; align-items: center; justify-content: center; color: var(--accent-violet);">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14 2 14 8 20 8"/>
-                        <line x1="16" y1="13" x2="8" y2="13"/>
-                        <line x1="16" y1="17" x2="8" y2="17"/>
-                        <polyline points="10 9 9 9 8 9"/>
+        <div id="modal-changelog" class="modal" role="dialog" aria-labelledby="changelog-modal-title"
+             style="max-width: 550px; padding: 28px; border: 1px solid rgba(167, 139, 250, 0.2); box-shadow: 0 0 35px rgba(167, 139, 250, 0.15), var(--shadow-lg); background: var(--bg-secondary); backdrop-filter: blur(20px);">
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+                <div class="update-icon-wrapper" style="width: 50px; height: 50px; border-radius: 12px; background: rgba(167, 139, 250, 0.08); border: 1.5px dashed var(--accent-violet); display: flex; align-items: center; justify-content: center; color: var(--accent-violet); animation: pulse-update-icon 2.5s infinite alternate;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px; animation: spin 12s linear infinite;">
+                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
                     </svg>
                 </div>
                 <div>
-                    <span id="changelog-badge" style="font-size: 0.7rem; font-weight: 800; background: rgba(236, 72, 153, 0.1); color: var(--accent-pink); padding: 2px 8px; border-radius: 20px; text-transform: uppercase;">Mise à Jour</span>
-                    <h2 id="changelog-modal-title" class="modal-title" style="margin: 4px 0 0 0; font-size: 1.4rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Nouveautés de la Version</h2>
+                    <span id="changelog-badge" style="font-size: 0.72rem; font-weight: 800; background: rgba(236, 72, 153, 0.15); color: var(--accent-pink); padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;" data-i18n="changelog_badge">Mise à Jour</span>
+                    <h2 id="changelog-modal-title" class="modal-title" style="margin: 4px 0 0 0; font-size: 1.5rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;" data-i18n="changelog_title">Nouveautés de la Version</h2>
                 </div>
             </div>
             
-            <p id="changelog-date" style="font-size: 0.8rem; color: var(--text-tertiary); margin-top: -8px; margin-bottom: 16px; border-bottom: 1px solid var(--bg-glass-border); padding-bottom: 10px;">Date : 6 juillet 2026</p>
+            <p id="changelog-date" style="font-size: 0.82rem; color: var(--text-secondary); margin-top: -8px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px; font-weight: 500;">Date : 6 juillet 2026</p>
             
-            <div id="changelog-items-list" style="display: flex; flex-direction: column; gap: 14px; max-height: 380px; overflow-y: auto; padding-right: 6px; margin-bottom: 20px;">
+            <div id="changelog-items-list" style="display: flex; flex-direction: column; gap: 14px; max-height: 360px; overflow-y: auto; padding-right: 6px; margin-bottom: 24px;">
                 <!-- Items populated dynamically in app.js -->
             </div>
-
-            <button id="btn-close-changelog" class="btn-primary btn-full" style="padding: 12px; font-weight: 700;">C'est parti ! 🚀</button>
+            
+            <button id="btn-close-changelog" class="btn-primary btn-full" style="padding: 14px; font-weight: 700; background: var(--gradient-primary); box-shadow: var(--shadow-glow); border: none; color: white; cursor: pointer; border-radius: var(--radius-md);" data-i18n="changelog_btn">C'est parti ! 🚀</button>
         </div>
     </div>
 
@@ -978,7 +1020,7 @@
                     <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
                 </svg>
             </div>
-            <h3 id="update-modal-title" class="modal-title" style="font-size: 1.6rem; font-weight: 900; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; display: inline-block;">Mise à Jour Disponible</h3>
+            <h3 id="update-modal-title" class="modal-title" style="font-size: 1.6rem; font-weight: 900; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; display: inline-block;" data-i18n="update_available_title">Mise à Jour Disponible</h3>
             <p id="update-modal-version" style="font-size: 0.9rem; font-weight: 700; color: var(--accent-pink); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Version 1.0.0</p>
             
             <p id="update-modal-message" class="confirm-message" style="margin-bottom: 24px; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; text-align: center; padding: 0 10px;">
@@ -988,7 +1030,7 @@
             <!-- Download Progress section -->
             <div id="update-progress-container" style="display:none; width: 100%; margin-bottom: 24px; text-align: left;">
                 <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600;">
-                    <span>Téléchargement en cours...</span>
+                    <span data-i18n="update_downloading_text">Téléchargement en cours...</span>
                     <span id="update-progress-percent" style="color: var(--accent-pink);">0%</span>
                 </div>
                 <div class="progress-bar-bg" style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03);">
@@ -997,8 +1039,8 @@
             </div>
 
             <div class="settings-buttons" id="update-modal-actions" style="display: flex; gap: 12px; justify-content: center; width: 100%;">
-                <button id="btn-update-cancel" class="btn-secondary" style="flex: 1; padding: 12px 20px; font-weight: 700; border-radius: var(--radius-md);">Plus tard</button>
-                <button id="btn-update-confirm" class="btn-primary" style="flex: 1; padding: 12px 20px; font-weight: 700; border-radius: var(--radius-md); background: var(--gradient-primary); box-shadow: var(--shadow-glow); border: none; color: white; cursor: pointer;">Télécharger</button>
+                <button id="btn-update-cancel" class="btn-secondary" style="flex: 1; padding: 12px 20px; font-weight: 700; border-radius: var(--radius-md);" data-i18n="update_btn_later">Plus tard</button>
+                <button id="btn-update-confirm" class="btn-primary" style="flex: 1; padding: 12px 20px; font-weight: 700; border-radius: var(--radius-md); background: var(--gradient-primary); box-shadow: var(--shadow-glow); border: none; color: white; cursor: pointer;" data-i18n="update_btn_download">Télécharger</button>
             </div>
         </div>
     </div>

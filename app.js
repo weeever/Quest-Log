@@ -36,6 +36,50 @@ let state = {
 
 // ---------- Changelogs ----------
 const CHANGELOGS = {
+    '0.0.3': {
+        title: "Quest Log v0.0.3 — Global Update",
+        date: "7 Juillet 2026",
+        badge: "Major Improvements",
+        items: [
+            {
+                title: "🌍 Système Multilingue / Multilingual",
+                desc: "Quest Log est entièrement traduit en Français et Anglais. Les succès Steam s'adaptent et se traduisent désormais à la volée selon votre langue !",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>`
+            },
+            {
+                title: "🎲 Sélection du Destin / Destiny Pick",
+                desc: "Une toute nouvelle animation de sélection d'un jeu aléatoire plus immersive, fluide et premium, dans le thème néon de l'application.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <circle cx="15.5" cy="15.5" r="1.5"/>
+                    <circle cx="15.5" cy="8.5" r="1.5"/>
+                    <circle cx="8.5" cy="15.5" r="1.5"/>
+                </svg>`
+            },
+            {
+                title: "🖼️ Qualité Graphique Optimisée",
+                desc: "Les jaquettes des jeux bénéficient d'une résolution améliorée et les fonds de modale sont calés vers le haut pour un affichage optimal.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                </svg>`
+            },
+            {
+                title: "🛡️ Correctifs & Stabilité",
+                desc: "Résolution du bug de duplication des récompenses XP/Or, fiabilisation du démarrage avec Windows et polissage général.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>`
+            }
+        ]
+    },
     '0.0.2': {
         title: "Quest Log v0.0.2 — Update Expérience",
         date: "6 Juillet 2026",
@@ -138,7 +182,7 @@ function playSynthSound(type) {
             gain.gain.setValueAtTime(0.08, ctx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
             osc.start(); osc.stop(ctx.currentTime + 0.25);
-            
+
             setTimeout(() => {
                 const osc2 = ctx.createOscillator();
                 const gain2 = ctx.createGain();
@@ -168,28 +212,28 @@ function playSynthSound(type) {
             const osc1 = ctx.createOscillator();
             const osc2 = ctx.createOscillator();
             const gainNode = ctx.createGain();
-            
+
             osc1.type = 'sine';
             osc1.frequency.setValueAtTime(523.25, now);
             osc1.frequency.exponentialRampToValueAtTime(880, now + 0.15);
-            
+
             osc2.type = 'triangle';
             osc2.frequency.setValueAtTime(659.25, now);
             osc2.frequency.exponentialRampToValueAtTime(1046.50, now + 0.15);
-            
+
             gainNode.gain.setValueAtTime(0.12, now);
             gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
-            
+
             osc1.connect(gainNode);
             osc2.connect(gainNode);
             gainNode.connect(ctx.destination);
-            
+
             osc1.start(now);
             osc2.start(now);
             osc1.stop(now + 0.8);
             osc2.stop(now + 0.8);
         }
-    } catch(e) { console.warn('AudioContext failed:', e); }
+    } catch (e) { console.warn('AudioContext failed:', e); }
 }
 
 // ---------- XP, Gold & Levels System ----------
@@ -200,17 +244,17 @@ function getXpForLevel(level) {
 async function addXp(amount) {
     if (!state.profile) state.profile = { xp: 0, level: 1, gold: 0 };
     state.profile.xp += amount;
-    
+
     let leveledUp = false;
     while (state.profile.xp >= getXpForLevel(state.profile.level)) {
         state.profile.xp -= getXpForLevel(state.profile.level);
         state.profile.level++;
         leveledUp = true;
     }
-    
+
     await saveState();
     updateProfileUI();
-    
+
     if (leveledUp) {
         playSynthSound('levelup');
         if (window.launchConfetti) window.launchConfetti();
@@ -234,13 +278,13 @@ function updateProfileUI() {
     if (state.profile.gold === undefined) state.profile.gold = 0;
     const xpNeeded = getXpForLevel(state.profile.level);
     const pct = (state.profile.xp / xpNeeded) * 100;
-    
+
     $('#profile-level').textContent = `${state.profile.username || 'Aventurier'} • Lvl ${state.profile.level}`;
     const formattedPoints = state.profile.xp.toLocaleString();
     const formattedNeeded = xpNeeded.toLocaleString();
     $('#profile-points').textContent = `${formattedPoints} / ${formattedNeeded} XP`;
     $('#xp-bar-fill').style.width = `${pct}%`;
-    
+
     // Update gold count in header
     $('#gold-count').textContent = state.profile.gold.toLocaleString();
 }
@@ -249,11 +293,11 @@ function showAchievementToast(name, description, xpAwarded, iconUrl = '') {
     const container = $('#toast-container');
     const toast = document.createElement('div');
     toast.className = 'toast-achievement';
-    
-    const iconHtml = iconUrl 
+
+    const iconHtml = iconUrl
         ? `<div class="toast-achievement-icon"><img src="${iconUrl}" alt="Success"></div>`
         : `<div class="toast-achievement-icon"><svg class="panel-svg" style="width:20px; height:20px;" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"/><path d="M12 2a6 6 0 0 1 6 6v3.5a6 6 0 0 1-12 0V8a6 6 0 0 1 6-6z"/></svg></div>`;
-        
+
     toast.innerHTML = `
         ${iconHtml}
         <div class="toast-achievement-info">
@@ -262,10 +306,10 @@ function showAchievementToast(name, description, xpAwarded, iconUrl = '') {
             <div class="toast-achievement-xp">+${xpAwarded} XP • +50 🪙</div>
         </div>
     `;
-    
+
     container.appendChild(toast);
     playSynthSound('achievement');
-    
+
     setTimeout(() => {
         toast.style.animation = 'toastOut 0.4s forwards';
         toast.addEventListener('animationend', () => toast.remove());
@@ -341,6 +385,410 @@ async function loadState() {
         } catch (e) { console.warn('Failed to load state:', e); }
     }
     applyTheme(state.theme || 'violet');
+
+    // Detect system locale if not set, and apply language
+    if (!state.language) {
+        const sysLocale = navigator.language || 'en';
+        state.language = sysLocale.toLowerCase().startsWith('fr') ? 'fr' : 'en';
+    }
+    applyLanguage(state.language);
+}
+
+const LOCALES = {
+    fr: {
+        quest_report: "Rapport de Quête",
+        time_played: "Temps joué",
+        xp_gained: "XP gagné",
+        gold_gained: "Or obtenu",
+        lvl_up: "LEVEL UP !",
+        ach_unlocked: "Succès débloqués",
+        minutes: "minutes",
+        hours: "heures",
+        hours_short: "h",
+        day: "jour",
+        days: "jours",
+        level: "Niveau",
+        btn_continue: "Continuer",
+        no_achievements: "Aucun succès débloqué.",
+        game_finished: "fini automatiquement !",
+        rewards_already_claimed: "Récompenses déjà récupérées.",
+        in_progress: "EN COURS",
+        to_play: "À Jouer",
+        completed: "Terminés",
+        stats: "Statistiques",
+        settings: "Paramètres",
+        add_game: "Ajouter",
+        app_title: "Quest Log - Beta 0.0.3",
+        global_progress: "Progression Globale",
+        filter_placeholder: "Filtrer...",
+        title_backlog: "Jeux dans le backlog",
+        title_completed: "Jeux terminés",
+        title_gold: "Pièces d'or accumulées",
+        title_playtime: "Temps de jeu total",
+        title_rating: "Note moyenne",
+        title_sort: "Trier",
+        sort_newest: "📅 Plus récent",
+        sort_oldest: "📅 Plus ancien",
+        sort_az: "🔤 A → Z",
+        sort_za: "🔤 Z → A",
+        sort_platform: "🖥️ Par plateforme",
+        sort_genre: "🎭 Par genre",
+        sort_rating: "⭐ Par note",
+        backlog_empty_title: "Ton backlog est vide !",
+        backlog_empty_subtitle: "Ajoute des jeux pour commencer ton aventure",
+        completed_empty_title: "Aucun jeu terminé",
+        completed_empty_subtitle: "Termine ton premier jeu pour débloquer cette section",
+        modal_tab_search: "Rechercher un jeu",
+        modal_tab_scanner: "Scanner PC",
+        search_input_placeholder: "Rechercher un jeu... (ex: Zelda, Hollow Knight)",
+        filter_popular: "🔥 Populaire",
+        filter_newest: "📅 Nouveautés",
+        filter_best_rating: "⭐ Mieux notés",
+        filter_all_platforms: "Toutes plateformes",
+        filter_all_genres: "Tous genres",
+        search_start_desc: "Tape le nom d'un jeu pour lancer la recherche",
+        scanner_title: "Scanner tes jeux installés",
+        scanner_desc: "Trouve automatiquement les jeux installés sur tes disques via Steam, Epic Games, Xbox, EA ou Ubisoft et ajoute-les en un clic à ton Quest Log.",
+        scanner_btn_scan: "Lancer l'analyse du PC",
+        settings_title_text: "Paramètres",
+        settings_theme_title: "Thème de l'application",
+        settings_theme_desc: "Personnalise la couleur principale.",
+        settings_lang_title: "Langue de l'application",
+        settings_lang_desc: "Choisis la langue d'affichage.",
+        settings_general_title: "Options Générales",
+        settings_general_desc: "Démarrage et comportement de la fenêtre.",
+        settings_autolaunch: "Démarrer avec Windows",
+        settings_tray: "Fermer dans la zone de notification (Tray)",
+        settings_enabled: "Activé",
+        settings_steam_title: "Intégration Steam",
+        settings_steam_desc: "Lie ton compte Steam en saisissant simplement ton pseudo ou ton adresse de profil.",
+        settings_steam_profile: "Profil Steam",
+        settings_steam_placeholder: "Pseudo Steam, ID64, ou URL de ton profil...",
+        settings_steam_advanced: "Options avancées (Clé API)",
+        settings_steam_apikey: "Clé API Steam (Optionnelle)",
+        settings_steam_apikey_placeholder: "Laisser vide pour utiliser la clé par défaut de Quest Log...",
+        settings_steam_btn: "Lier le compte",
+        settings_steam_status_unlinked: "Non connecté",
+        settings_save_title: "Sauvegarde Locale",
+        settings_save_desc: "Les données sont automatiquement enregistrées. Tu peux exporter ou importer des sauvegardes manuelles.",
+        settings_save_export: "Exporter .json",
+        settings_save_import: "Importer .json",
+        settings_update_title: "Mises à Jour",
+        settings_update_desc: "Recherche les dernières mises à jour du tracker Quest Log.",
+        settings_update_btn: "Vérifier les mises à jour",
+        settings_update_status_ready: "Prêt",
+        settings_danger_title: "Zone de Danger",
+        settings_danger_desc: "Efface définitivement toutes les données de ton Quest Log (Jeux, Niveaux, Progression).",
+        settings_danger_btn: "Réinitialiser l'application",
+        details_notes_subtitle: "Notes",
+        details_launch_subtitle: "Lancement",
+        details_exe_subtitle: "Fichier Exécutable (.exe)",
+        details_exe_unlinked: "Aucun exécutable lié",
+        details_exe_btn: "Lier un .exe",
+        details_achievements_title: "Succès",
+        rating_celebration_title: "Bravo !",
+        rating_celebration_subtitle: "Comment tu as trouvé ce jeu ?",
+        rating_label_bad: "Bof",
+        rating_label_good: "Chef-d'œuvre",
+        rating_comment_label: "Commentaire",
+        rating_playtime_label: "Temps de jeu",
+        rating_submit_btn: "Valider la note",
+        destiny_title: "SÉLECTION DE QUÊTE",
+        destiny_chosen: "Le Destin a Choisi...",
+        destiny_btn: "C'est parti ! ⚔️",
+        first_launch_title: "Démarrer ton Aventure",
+        first_launch_desc: "Crée ton profil d'aventurier Quest Log pour commencer à accumuler de l'XP et des pièces d'or !",
+        first_launch_username: "Nom de l'aventurier",
+        first_launch_placeholder: "Saisis ton pseudo...",
+        first_launch_btn: "Commencer la Quête",
+        scanner_modal_title: "Scanner de jeux locaux",
+        scanner_modal_subtitle: "Sélectionne les jeux trouvés sur ton PC à ajouter au backlog.",
+        scanner_loading_text: "Recherche en cours dans les dossiers Steam, Epic, Xbox, EA...",
+        scanner_btn_select_all: "Tout sélectionner",
+        scanner_btn_add: "Ajouter la sélection",
+        overlay_connection_title: "Quest Log Link Active",
+        overlay_connection_desc: "Suivi en arrière-plan actif • 🪙 +1/min",
+        changelog_badge: "Mise à Jour",
+        changelog_title: "Nouveautés de la Version",
+        changelog_btn: "C'est parti ! 🚀",
+        update_available_title: "Mise à Jour Disponible",
+        update_downloading_text: "Téléchargement en cours...",
+        update_btn_later: "Plus tard",
+        update_btn_download: "Télécharger",
+        confirm_title: "Confirmation",
+        confirm_btn_cancel: "Annuler",
+        confirm_btn_ok: "Confirmer",
+        prompt_title: "Liaison Steam",
+        prompt_btn_skip: "Passer",
+        prompt_btn_ok: "Lier",
+        title_xp_bar: "Progression du niveau",
+        win_minimize: "Minimiser",
+        win_maximize: "Agrandir",
+        win_close: "Fermer",
+        btn_add_game: "Ajouter un jeu",
+        btn_settings: "Paramètres",
+        now_playing_badge: "EN COURS",
+        now_playing_ach_title: "Progression des succès",
+        now_playing_complete: "Terminé !",
+        now_playing_skip: "Passer"
+    },
+    en: {
+        quest_report: "Quest Report",
+        time_played: "Time played",
+        xp_gained: "XP gained",
+        gold_gained: "Gold obtained",
+        lvl_up: "LEVEL UP!",
+        ach_unlocked: "Achievements unlocked",
+        minutes: "minutes",
+        hours: "hours",
+        hours_short: "h",
+        day: "day",
+        days: "days",
+        level: "Level",
+        btn_continue: "Continue",
+        no_achievements: "No achievements unlocked.",
+        game_finished: "completed automatically!",
+        rewards_already_claimed: "Rewards already claimed.",
+        in_progress: "IN PROGRESS",
+        to_play: "To Play",
+        completed: "Completed",
+        stats: "Statistics",
+        settings: "Settings",
+        add_game: "Add Game",
+        app_title: "Quest Log - Beta 0.0.3",
+        global_progress: "Global Progress",
+        filter_placeholder: "Filter list...",
+        title_backlog: "Games in backlog",
+        title_completed: "Completed games",
+        title_gold: "Gold coins collected",
+        title_playtime: "Total playtime",
+        title_rating: "Average rating",
+        title_sort: "Sort",
+        sort_newest: "📅 Newest",
+        sort_oldest: "📅 Oldest",
+        sort_az: "🔤 A → Z",
+        sort_za: "🔤 Z → A",
+        sort_platform: "🖥️ By platform",
+        sort_genre: "🎭 By genre",
+        sort_rating: "⭐ By rating",
+        backlog_empty_title: "Your backlog is empty!",
+        backlog_empty_subtitle: "Add games to begin your adventure",
+        completed_empty_title: "No completed games",
+        completed_empty_subtitle: "Complete your first game to unlock this section",
+        modal_tab_search: "Search Game",
+        modal_tab_scanner: "PC Scanner",
+        search_input_placeholder: "Search for a game... (e.g. Zelda, Hollow Knight)",
+        filter_popular: "🔥 Popular",
+        filter_newest: "📅 New releases",
+        filter_best_rating: "⭐ Best rated",
+        filter_all_platforms: "All platforms",
+        filter_all_genres: "All genres",
+        search_start_desc: "Type a game's name to launch the search",
+        scanner_title: "Scan your installed games",
+        scanner_desc: "Automatically search for games installed on your drives via Steam, Epic Games, Xbox, EA or Ubisoft and add them to your Quest Log in a single click.",
+        scanner_btn_scan: "Start PC Scan",
+        settings_title_text: "Settings",
+        settings_theme_title: "App Theme",
+        settings_theme_desc: "Customize primary neon accent color.",
+        settings_lang_title: "App Language",
+        settings_lang_desc: "Choose display language.",
+        settings_general_title: "General Options",
+        settings_general_desc: "Startup and window behavior settings.",
+        settings_autolaunch: "Start with Windows",
+        settings_tray: "Close to Notification Area (Tray)",
+        settings_enabled: "Enabled",
+        settings_steam_title: "Steam Integration",
+        settings_steam_desc: "Link your Steam account by entering your profile URL or ID.",
+        settings_steam_profile: "Steam Profile",
+        settings_steam_placeholder: "Steam Username, ID64, or profile URL...",
+        settings_steam_advanced: "Advanced options (API Key)",
+        settings_steam_apikey: "Steam API Key (Optional)",
+        settings_steam_apikey_placeholder: "Leave empty to use Quest Log's default key...",
+        settings_steam_btn: "Link Account",
+        settings_steam_status_unlinked: "Not connected",
+        settings_save_title: "Local Save",
+        settings_save_desc: "Your progress is automatically saved. You can export or import manual backups.",
+        settings_save_export: "Export .json",
+        settings_save_import: "Import .json",
+        settings_update_title: "Software Updates",
+        settings_update_desc: "Search for the latest versions of Quest Log tracker.",
+        settings_update_btn: "Check for updates",
+        settings_update_status_ready: "Ready",
+        settings_danger_title: "Danger Zone",
+        settings_danger_desc: "Permanently erase all your Quest Log data (Games, Levels, Progress).",
+        settings_danger_btn: "Reset application",
+        details_notes_subtitle: "Notes",
+        details_launch_subtitle: "Launcher",
+        details_exe_subtitle: "Executable File (.exe)",
+        details_exe_unlinked: "No executable linked",
+        details_exe_btn: "Link an .exe",
+        details_achievements_title: "Achievements",
+        rating_celebration_title: "Congratulations!",
+        rating_celebration_subtitle: "How did you find this game?",
+        rating_label_bad: "Meh",
+        rating_label_good: "Masterpiece",
+        rating_comment_label: "Comment",
+        rating_playtime_label: "Playtime",
+        rating_submit_btn: "Submit Rating",
+        destiny_title: "QUEST SELECTION",
+        destiny_chosen: "Destiny Has Chosen...",
+        destiny_btn: "Let's Go! ⚔️",
+        first_launch_title: "Start Your Adventure",
+        first_launch_desc: "Create your adventurer profile to start earning XP and gold!",
+        first_launch_username: "Adventurer Name",
+        first_launch_placeholder: "Enter username...",
+        first_launch_btn: "Begin Quest",
+        scanner_modal_title: "Local PC Game Scanner",
+        scanner_modal_subtitle: "Select the games detected on your PC to add to the backlog.",
+        scanner_loading_text: "Searching folders of Steam, Epic, Xbox, EA...",
+        scanner_btn_select_all: "Select All",
+        scanner_btn_add: "Add Selection",
+        overlay_connection_title: "Quest Log Link Active",
+        overlay_connection_desc: "Background tracking active • 🪙 +1/min",
+        changelog_badge: "Update",
+        changelog_title: "Version Highlights",
+        changelog_btn: "Let's Go! 🚀",
+        update_available_title: "Update Available",
+        update_downloading_text: "Downloading update...",
+        update_btn_later: "Later",
+        update_btn_download: "Download",
+        confirm_title: "Confirmation",
+        confirm_btn_cancel: "Cancel",
+        confirm_btn_ok: "Confirm",
+        prompt_title: "Steam Linking",
+        prompt_btn_skip: "Skip",
+        prompt_btn_ok: "Link",
+        title_xp_bar: "Level progression",
+        win_minimize: "Minimize",
+        win_maximize: "Maximize",
+        win_close: "Close",
+        btn_add_game: "Add Game",
+        btn_settings: "Settings",
+        now_playing_badge: "PLAYING",
+        now_playing_ach_title: "Achievement progress",
+        now_playing_complete: "Done !",
+        now_playing_skip: "Skip"
+    }
+};
+
+const GAMER_QUOTES = [
+    {
+        fr: { quote: "Le bonhomme est dans un autre château.", author: "Toad (Super Mario Bros.)" },
+        en: { quote: "Thank you Mario! But our princess is in another castle!", author: "Toad (Super Mario Bros.)" }
+    },
+    {
+        fr: { quote: "Reste un instant, et écoute.", author: "Deckard Cain (Diablo II)" },
+        en: { quote: "Stay awhile and listen.", author: "Deckard Cain (Diablo II)" }
+    },
+    {
+        fr: { quote: "C'est dangereux d'y aller seul ! Prends ceci.", author: "Vieil homme (Zelda)" },
+        en: { quote: "It's dangerous to go alone! Take this.", author: "Old Man (Zelda)" }
+    },
+    {
+        fr: { quote: "La guerre. La guerre ne meurt jamais.", author: "Narrateur (Fallout)" },
+        en: { quote: "War. War never changes.", author: "Narrator (Fallout)" }
+    },
+    {
+        fr: { quote: "Qu'est-ce qu'un homme ? Un misérable petit tas de secrets.", author: "Dracula (Castlevania)" },
+        en: { quote: "What is a man? A miserable little pile of secrets.", author: "Dracula (Castlevania)" }
+    },
+    {
+        fr: { quote: "Tu as failli devenir un sandwich au Jill !", author: "Barry Burton (Resident Evil)" },
+        en: { quote: "You almost became a Jill sandwich!", author: "Barry Burton (Resident Evil)" }
+    },
+    {
+        fr: { quote: "Ne fais confiance à personne sur le champ de bataille.", author: "Solid Snake (Metal Gear Solid)" },
+        en: { quote: "Do not trust anyone on the battlefield.", author: "Do not trust anyone on the battlefield." }
+    },
+    {
+        fr: { quote: "Est-ce que je t'ai déjà défini la folie ?", author: "Vaas Montenegro (Far Cry 3)" },
+        en: { quote: "Did I ever tell you the definition of insanity?", author: "Vaas Montenegro (Far Cry 3)" }
+    },
+    {
+        fr: { quote: "Pas de dieux ou de rois. Seulement l'homme.", author: "Andrew Ryan (BioShock)" },
+        en: { quote: "No gods or kings. Only man.", author: "Andrew Ryan (BioShock)" }
+    },
+    {
+        fr: { quote: "Le temps passe, les gens changent.", author: "Sheik (Zelda Ocarina of Time)" },
+        en: { quote: "Time passes, people change.", author: "Time passes, people change." }
+    }
+];
+let currentQuoteIndex = Math.floor(Math.random() * GAMER_QUOTES.length);
+
+function updateGamerQuote() {
+    const el = $('#gamer-quote');
+    if (!el) return;
+    const lang = state.language || 'fr';
+    const qObj = GAMER_QUOTES[currentQuoteIndex];
+    if (qObj) {
+        const item = qObj[lang] || qObj['fr'];
+        el.textContent = `"${item.quote}" — ${item.author}`;
+        el.title = state.language === 'en' ? "Click for another quote" : "Clique pour une autre citation";
+    }
+}
+
+function applyLanguage(lang) {
+    state.language = lang;
+    const isEn = lang === 'en';
+    const t = (key) => LOCALES[lang][key] || LOCALES['fr'][key] || '';
+
+    document.documentElement.setAttribute('lang', lang);
+
+    const btnFr = $('#btn-lang-fr');
+    const btnEn = $('#btn-lang-en');
+    if (btnFr && btnEn) {
+        if (isEn) {
+            btnFr.className = 'btn-secondary btn-sm lang-btn';
+            btnEn.className = 'btn-primary btn-sm lang-btn';
+        } else {
+            btnFr.className = 'btn-primary btn-sm lang-btn';
+            btnEn.className = 'btn-secondary btn-sm lang-btn';
+        }
+    }
+
+    // 1. Generic DOM text nodes translation
+    $$('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const translated = t(key);
+        if (translated) {
+            el.textContent = translated;
+        }
+    });
+
+    // 2. Generic Placeholders translation
+    $$('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        const translated = t(key);
+        if (translated) el.placeholder = translated;
+    });
+
+    // 3. Generic Tooltips (title) translation
+    $$('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        const translated = t(key);
+        if (translated) el.title = translated;
+    });
+
+    // 4. Generic Aria labels translation
+    $$('[data-i18n-aria-label]').forEach(el => {
+        const key = el.getAttribute('data-i18n-aria-label');
+        const translated = t(key);
+        if (translated) el.setAttribute('aria-label', translated);
+    });
+
+    // Update gamer quote display
+    updateGamerQuote();
+
+    // Re-render UI list elements, profile levels, headers, etc.
+    renderAll();
+    updateProfileUI();
+    updateNowPlaying();
+
+    // If game details modal is open, re-render it to apply updated languages instantly
+    const detailsOverlay = $('#details-overlay');
+    if (detailsOverlay && currentDetailsId && detailsOverlay.classList.contains('active')) {
+        openGameDetails(currentDetailsId, currentDetailsSource === 'completed');
+    }
 }
 
 function applyTheme(themeName) {
@@ -350,7 +798,8 @@ function applyTheme(themeName) {
 
 function formatDate(timestamp) {
     if (!timestamp) return '';
-    return new Date(timestamp).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+    const locale = state.language === 'en' ? 'en-US' : 'fr-FR';
+    return new Date(timestamp).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 // ---------- DOM ----------
@@ -569,12 +1018,12 @@ function updateNowPlaying() {
         // Render achievements & playtime inside Now Playing
         const progressBlock = $('#now-playing-progress-block');
         const hours = game.playtime ? Math.round(game.playtime / 60 * 10) / 10 : 0;
-        
+
         if (game.steamAppId && game.achievements && game.achievements.length > 0) {
             const total = game.achievements.length;
             const unlocked = game.achievements.filter(a => a.unlocked).length;
             const pct = Math.round((unlocked / total) * 100);
-            
+
             $('#now-playing-ach-ratio').textContent = `${unlocked}/${total}`;
             $('#now-playing-ach-fill').style.width = `${pct}%`;
             $('#now-playing-ach-fill').parentElement.style.display = 'block';
@@ -676,13 +1125,13 @@ async function performSearch(query, append = false) {
 
     isSearching = true;
     const cleanQuery = currentSearchQuery.trim().replace(/"/g, '').replace(/\\/g, '');
-    
+
     const sortFilterRadio = document.querySelector('input[name="sort"]:checked');
     const sortFilter = sortFilterRadio ? sortFilterRadio.value : 'popularity';
-    
+
     const platformCheckboxes = Array.from(document.querySelectorAll('#dropdown-platform input:checked'));
     const platformFilter = platformCheckboxes.map(cb => cb.value).join(',');
-    
+
     const genreCheckboxes = Array.from(document.querySelectorAll('#dropdown-genre input:checked'));
     const genreFilter = genreCheckboxes.map(cb => cb.value).join(',');
 
@@ -758,7 +1207,7 @@ async function performSearch(query, append = false) {
             btn.disabled = true;
             btn.innerHTML = '<span class="add-check">✓</span> Ajouté';
             card.classList.add('added');
-            
+
             let steamAppId = '';
             if (game.external_games && Array.isArray(game.external_games)) {
                 const steamExt = game.external_games.find(ext => ext.category === 1 || (ext.url && ext.url.includes('steampowered.com')));
@@ -794,7 +1243,8 @@ function showToast(message, icon = '✅') {
         '🖥️': `<svg class="stat-svg" style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
         '⚙️': `<svg class="stat-svg" style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
         '📥': `<svg class="stat-svg" style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>`,
-        '↩️': `<svg class="stat-svg" style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>`
+        '↩️': `<svg class="stat-svg" style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>`,
+        '🌐': `<svg class="stat-svg" style="width:16px; height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`
     };
     const iconContent = TOAST_ICONS[icon] || icon;
     toast.innerHTML = `<span class="toast-icon">${iconContent}</span><span>${message}</span>`;
@@ -935,15 +1385,15 @@ const SIMULATED_ACHIEVEMENTS = [
 async function tryAutoFindSteamAppId(game) {
     if (game.steamAppId) return true;
     if (!isElectron) return false;
-    
+
     // 1. Try Steam storesearch
     try {
         const result = await window.questlog.searchSteamAppId(game.name);
         if (result && result.items && result.items.length > 0) {
             const queryName = game.name.toLowerCase().trim();
             const matched = result.items.find(item => item.name.toLowerCase().trim() === queryName)
-                         || result.items.find(item => item.name.toLowerCase().includes(queryName) || queryName.includes(item.name.toLowerCase()))
-                         || result.items[0];
+                || result.items.find(item => item.name.toLowerCase().includes(queryName) || queryName.includes(item.name.toLowerCase()))
+                || result.items[0];
             if (matched) {
                 game.steamAppId = matched.id.toString();
                 await saveState();
@@ -951,7 +1401,7 @@ async function tryAutoFindSteamAppId(game) {
                 return true;
             }
         }
-    } catch(e) { console.warn('Auto Steam lookup failed:', e); }
+    } catch (e) { console.warn('Auto Steam lookup failed:', e); }
 
     // 2. Try IGDB catalog external games fallback (Highly accurate, matches e.g. "Red Dead 2" -> RDR2 Steam ID)
     try {
@@ -960,9 +1410,9 @@ async function tryAutoFindSteamAppId(game) {
         if (igdbRes && igdbRes.length > 0) {
             const queryName = game.name.toLowerCase().trim();
             const matched = igdbRes.find(item => item.name.toLowerCase().trim() === queryName)
-                         || igdbRes.find(item => item.name.toLowerCase().includes(queryName) || queryName.includes(item.name.toLowerCase()))
-                         || igdbRes[0];
-            
+                || igdbRes.find(item => item.name.toLowerCase().includes(queryName) || queryName.includes(item.name.toLowerCase()))
+                || igdbRes[0];
+
             if (matched && matched.external_games) {
                 const steamExt = matched.external_games.find(ext => ext.category === 1 || (ext.url && ext.url.includes('steampowered.com')));
                 if (steamExt) {
@@ -973,7 +1423,7 @@ async function tryAutoFindSteamAppId(game) {
                 }
             }
         }
-    } catch(e) { console.warn('Auto IGDB Steam ID lookup failed:', e); }
+    } catch (e) { console.warn('Auto IGDB Steam ID lookup failed:', e); }
 
     return false;
 }
@@ -982,7 +1432,7 @@ async function fetchAchievementsFromSteam(game) {
     if (!game.steamAppId) return;
     try {
         let schemaList = [];
-        
+
         // 1. Prioritize official Steam API Schema if API Key is available to get authentic apinames
         if (state.steamApiKey) {
             const schemaRes = await window.questlog.fetchSteamSchema(state.steamApiKey, game.steamAppId);
@@ -995,7 +1445,7 @@ async function fetchAchievementsFromSteam(game) {
                 }));
             }
         }
-        
+
         // 2. Fall back to public stats page scraping if official schema failed or API Key is missing
         if (schemaList.length === 0 && isElectron) {
             const publicRes = await window.questlog.fetchPublicSteamSchema(game.steamAppId);
@@ -1008,7 +1458,7 @@ async function fetchAchievementsFromSteam(game) {
                 }));
             }
         }
-        
+
         if (schemaList.length > 0) {
             // 3. Fetch online player achievements if Steam ID and API Key are present
             let playerList = [];
@@ -1016,7 +1466,7 @@ async function fetchAchievementsFromSteam(game) {
                 const playerRes = await window.questlog.fetchSteamAchievements(state.steamApiKey, state.steamId, game.steamAppId);
                 playerList = playerRes?.playerstats?.achievements || [];
             }
-            
+
             // 4. Check local achievements (Goldberg, RUNE, CODEX, etc.)
             let localUnlockedList = [];
             if (isElectron) {
@@ -1029,7 +1479,7 @@ async function fetchAchievementsFromSteam(game) {
             const mapped = schemaList.map(ach => {
                 const onlineAch = playerList.find(p => p.apiname === ach.apiname);
                 const isOnlineUnlocked = onlineAch ? onlineAch.achieved === 1 : false;
-                
+
                 // Flexible match for local achievements (RUNE, CODEX, Goldberg)
                 const isLocalUnlocked = localUnlockedList.some(locKey => {
                     const cleanLoc = locKey.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -1037,7 +1487,7 @@ async function fetchAchievementsFromSteam(game) {
                     const cleanName = ach.name.toLowerCase().replace(/[^a-z0-9]/g, '');
                     return cleanLoc === cleanApi || cleanLoc === cleanName || cleanLoc.includes(cleanApi) || cleanApi.includes(cleanLoc);
                 });
-                
+
                 const oldAch = game.achievements ? game.achievements.find(o => o.apiname === ach.apiname) : null;
                 const isCachedUnlocked = oldAch ? oldAch.unlocked : false;
 
@@ -1050,10 +1500,10 @@ async function fetchAchievementsFromSteam(game) {
                     unlockTime: onlineAch ? onlineAch.unlocktime : (oldAch ? oldAch.unlockTime : 0)
                 };
             });
-            
+
             if (game.achievements && game.achievements.length > 0) {
                 const wasSimulated = game.achievements.length === SIMULATED_ACHIEVEMENTS.length && game.achievements.every(a => a.apiname.startsWith('sim_'));
-                
+
                 if (!wasSimulated) {
                     mapped.forEach(newAch => {
                         const oldAch = game.achievements.find(o => o.apiname === newAch.apiname);
@@ -1068,7 +1518,7 @@ async function fetchAchievementsFromSteam(game) {
                                     icon: newAch.icon
                                 });
                             }
-                            
+
                             // Auto detect game completion from achievement
                             if (isGameCompletionAchievement(newAch)) {
                                 handleGameAutoCompleted(game, newAch);
@@ -1077,15 +1527,15 @@ async function fetchAchievementsFromSteam(game) {
                     });
                 }
             }
-            
+
             game.achievements = mapped;
             await saveState();
-            
+
             if (currentDetailsId === game.id) {
                 renderAchievementsInDetails(game);
             }
         }
-    } catch(e) { console.warn('Failed to fetch Steam achievements:', e); }
+    } catch (e) { console.warn('Failed to fetch Steam achievements:', e); }
 }
 
 async function checkSimulatedAchievements(game) {
@@ -1097,9 +1547,9 @@ function renderAchievementsInDetails(game) {
     const list = $('#achievements-list');
     const ratio = $('#achievements-ratio');
     const fill = $('#achievements-progress-fill');
-    
+
     block.style.display = 'block';
-    
+
     if (!game.achievements || game.achievements.length === 0) {
         ratio.textContent = "0 / 0";
         fill.style.width = "0%";
@@ -1109,7 +1559,7 @@ function renderAchievementsInDetails(game) {
                 <button id="btn-import-achievements-json" class="btn-secondary btn-sm" style="font-size: 0.75rem; padding: 6px 12px; border-radius: var(--radius-sm);">Importer des succès (.json)</button>
             </div>
         `;
-        
+
         $('#btn-import-achievements-json')?.addEventListener('click', async () => {
             const achs = await window.questlog.selectAchievementsJson();
             if (achs) {
@@ -1133,29 +1583,29 @@ function renderAchievementsInDetails(game) {
         });
         return;
     }
-    
+
     list.innerHTML = '';
-    
+
     const total = game.achievements.length;
     const unlocked = game.achievements.filter(a => a.unlocked).length;
     const pct = total > 0 ? (unlocked / total) * 100 : 0;
-    
+
     ratio.textContent = `${unlocked} / ${total}`;
     fill.style.width = `${pct}%`;
-    
+
     // Sort unlocked first, then locked
     const sorted = [...game.achievements].sort((a, b) => (b.unlocked ? 1 : 0) - (a.unlocked ? 1 : 0));
-    
+
     sorted.forEach(ach => {
         const item = document.createElement('div');
         item.className = `achievement-item ${ach.unlocked ? 'unlocked' : ''}`;
-        
+
         // Achievements are no longer manually unlockable to prevent cheating/bugs
-        
-        const iconHtml = ach.icon 
-            ? `<img src="${ach.icon}" alt="Icon">` 
+
+        const iconHtml = ach.icon
+            ? `<img src="${ach.icon}" alt="Icon">`
             : '🏆';
-            
+
         item.innerHTML = `
             <div class="achievement-icon">${iconHtml}</div>
             <div class="achievement-text-info">
@@ -1189,7 +1639,7 @@ async function scanLocalGameConfig(game, path) {
                 renderAll();
             }
         }
-    } catch(e) { console.warn('Failed to scan local game config:', e); }
+    } catch (e) { console.warn('Failed to scan local game config:', e); }
 }
 
 let activePlaySession = null;
@@ -1199,7 +1649,7 @@ async function selectExeFile(game, manual = false) {
         showToast("Disponible uniquement sur Windows.", "🖥️");
         return;
     }
-    
+
     if (!manual) {
         const autoPath = await window.questlog.autoFindExe(game.name);
         if (autoPath) {
@@ -1213,7 +1663,7 @@ async function selectExeFile(game, manual = false) {
             return;
         }
     }
-    
+
     const path = await window.questlog.selectExe();
     if (path) {
         game.exePath = path;
@@ -1253,13 +1703,13 @@ async function tryAutoFindSteamAppId(game) {
         const result = await window.questlog.searchSteamAppId(game.name);
         if (result && result.items && result.items.length > 0) {
             const queryName = game.name.toLowerCase().trim();
-            const matched = result.items.find(item => item.name.toLowerCase().trim() === queryName) 
-                         || result.items[0];
-            
+            const matched = result.items.find(item => item.name.toLowerCase().trim() === queryName)
+                || result.items[0];
+
             if (matched) {
                 game.steamAppId = matched.id.toString();
                 await saveState();
-                
+
                 if (currentDetailsId === game.id) {
                     $('#input-steam-appid').value = game.steamAppId;
                     $('#steam-appid-status').textContent = `Lié à Steam (AppID: ${game.steamAppId})`;
@@ -1277,27 +1727,27 @@ async function startPlaySession(game, isAutoDetect = false) {
         if (!isAutoDetect) showToast("Un jeu est déjà en cours d'exécution.", "⚠️");
         return;
     }
-    
+
     if (!isAutoDetect) {
         if (!game.exePath) {
             await selectExeFile(game);
             if (!game.exePath) return;
         }
-        
+
         showToast(`Démarrage de ${game.name}...`, "🎮");
-        
+
         const result = await window.questlog.launchGame(game.id, game.exePath);
         if (!result.success) {
             showToast(`Erreur : ${result.error}`, "❌");
             return;
         }
     }
-    
+
     const startTime = Date.now();
     state.currentGameId = game.id;
     await saveState();
     renderAll();
-    
+
     // Show game connected popup overlay in-app immediately
     showGameConnectedOverlay(game);
     if (isElectron) {
@@ -1310,7 +1760,7 @@ async function startPlaySession(game, isAutoDetect = false) {
         }, 7000);
         window.questlog.setDiscordPresence(game.name, game.cover || '', game.steamAppId || '');
     }
-    
+
     activePlaySession = {
         gameId: game.id,
         startTime: startTime,
@@ -1319,17 +1769,17 @@ async function startPlaySession(game, isAutoDetect = false) {
             addGold(1); // 1 gold per minute
             checkSimulatedAchievements(game);
             saveState();
-            
+
             if (currentDetailsId === game.id) {
                 const hours = Math.round(game.playtime / 60 * 10) / 10;
                 $('#details-date').innerHTML = `Ajouté le ${formatDate(game.addedAt)} • <svg class="stat-svg" style="width:12px; height:12px; margin-right:2px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${hours}h`;
             }
-            
+
             // Real-time update Now Playing playtime and backlog card
             if (state.currentGameId === game.id) {
                 const hours = Math.round(game.playtime / 60 * 10) / 10;
                 $('#now-playing-playtime-text').innerHTML = `<svg class="stat-svg" style="width:12px; height:12px; margin-right:4px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${hours}h jouées`;
-                
+
                 // Update now playing achievements fill in case they synced
                 if (game.achievements && game.achievements.length > 0) {
                     const total = game.achievements.length;
@@ -1344,14 +1794,14 @@ async function startPlaySession(game, isAutoDetect = false) {
             }
         }, 60000)
     };
-    
+
     if (game.steamAppId) {
         fetchAchievementsFromSteam(game);
         if (isElectron) {
             window.questlog.watchLocalAchievements(game.steamAppId);
         }
     }
-    
+
     if (currentDetailsId === game.id) {
         const playBtn = $('#btn-play-game');
         playBtn.innerHTML = '<span>⏹️ Arrêter le suivi</span>';
@@ -1362,14 +1812,14 @@ async function startPlaySession(game, isAutoDetect = false) {
 
 async function stopPlaySession() {
     if (!activePlaySession) return;
-    
+
     clearInterval(activePlaySession.timerInterval);
     if (isElectron) {
         window.questlog.stopWatchingLocalAchievements();
         window.questlog.destroyOverlay();
         window.questlog.clearDiscordPresence();
     }
-    
+
     const game = state.backlog.find(g => g.id === activePlaySession.gameId);
     if (game) {
         const elapsedMinutes = Math.round((Date.now() - activePlaySession.startTime) / 60000);
@@ -1381,11 +1831,11 @@ async function stopPlaySession() {
             showToast("Session terminée !", "🎮");
         }
     }
-    
+
     activePlaySession = null;
     await saveState();
     renderAll();
-    
+
     if (currentDetailsId && game && currentDetailsId === game.id) {
         const playBtn = $('#btn-play-game');
         playBtn.innerHTML = '<span>▶️ Lancer le jeu</span>';
@@ -1468,10 +1918,10 @@ function openGameDetails(id, fromCompleted = false) {
     } else {
         launcherBlock.style.display = 'flex';
         if (exeBlock) exeBlock.style.display = 'flex';
-        
+
         const playBtn = $('#btn-play-game');
         const statusSpan = $('#launcher-status');
-        
+
         if (activePlaySession && activePlaySession.gameId === game.id) {
             playBtn.innerHTML = '<span><svg class="panel-svg" style="width:16px; height:16px; margin-right:6px;" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/></svg> Arrêter le suivi</span>';
             playBtn.className = 'btn-danger btn-full';
@@ -1537,7 +1987,7 @@ function showPromptModal(message, defaultValue = '') {
         $('#prompt-message').textContent = message;
         input.value = defaultValue;
         openModal(overlay);
-        
+
         setTimeout(() => input.focus(), 300);
 
         const btnOk = $('#btn-prompt-ok');
@@ -1598,12 +2048,12 @@ function startCompleteGame(id) {
 
 async function completeGameWithRating() {
     if (!pendingCompleteGameId || selectedRating === 0) return;
-    
+
     // Stop play session if active for this game
     if (activePlaySession && activePlaySession.gameId === pendingCompleteGameId) {
         await stopPlaySession();
     }
-    
+
     const game = state.backlog.find(g => g.id === pendingCompleteGameId);
     if (!game) return;
 
@@ -1611,7 +2061,7 @@ async function completeGameWithRating() {
     game.rating = selectedRating;
     game.completedAt = Date.now();
     game.comment = $('#rating-comment').value.trim();
-    
+
     const playtimeInput = $('#rating-playtime').value.trim();
     if (playtimeInput) {
         // User entered hours, convert to minutes internally
@@ -1622,17 +2072,17 @@ async function completeGameWithRating() {
     const hours = (game.playtime || 0) / 60;
     const baseCompletionXp = 1000;
     const playtimeBonus = Math.min(hours * 100, 5000); // capped at 50 hours of bonus
-    
+
     let achievementsRatio = 0;
     if (game.achievements && game.achievements.length > 0) {
         const total = game.achievements.length;
         const unlocked = game.achievements.filter(a => a.unlocked).length;
         achievementsRatio = unlocked / total;
     }
-    
+
     const multiplier = 1 + (achievementsRatio * 1.5); // Up to 2.5x multiplier
     const finalXpReward = Math.round((baseCompletionXp + playtimeBonus) * multiplier);
-    
+
     // Gold Reward
     const baseGold = 500;
     const goldPlaytimeBonus = Math.min(hours * 20, 1000);
@@ -1643,7 +2093,7 @@ async function completeGameWithRating() {
     closeModal($('#rating-overlay'));
 
     if (window.launchConfetti) window.launchConfetti();
-    
+
     // Award XP and Gold
     addXp(finalXpReward);
     addGold(finalGoldReward);
@@ -1663,23 +2113,23 @@ async function completeGameWithRating() {
 function isGameCompletionAchievement(ach) {
     const name = (ach.name || '').toLowerCase();
     const desc = (ach.description || '').toLowerCase();
-    
+
     const keywords = [
         // English
-        'completed the game', 'completed the campaign', 'completed the story', 
-        'finish the game', 'finished the game', 'beat the game', 'beat the final', 
-        'epilogue', 'the end', 'campaign completed', 'story completed', 
+        'completed the game', 'completed the campaign', 'completed the story',
+        'finish the game', 'finished the game', 'beat the game', 'beat the final',
+        'epilogue', 'the end', 'campaign completed', 'story completed',
         'clear the game', 'game cleared', 'credits roll', 'rolled credits',
         'all achievements', 'platinum trophy', 'perfect game', 'final boss defeated',
         'defeated the final boss', 'complete all chapters', 'final chapter',
-        
+
         // French
         'terminer le jeu', 'terminé le jeu', 'fini le jeu', 'finir le jeu',
         'campagne terminée', 'histoire terminée', 'chapitre final', 'épilogue',
         'battre le boss final', 'vaincu le boss final', 'les crédits', 'crédits de fin',
         'tous les succès', 'tous les trophées', 'la fin', 'jeu terminé'
     ];
-    
+
     return keywords.some(kw => name.includes(kw) || desc.includes(kw));
 }
 
@@ -1687,31 +2137,31 @@ async function handleGameAutoCompleted(game, ach) {
     // Only trigger if the game is still in backlog and not already pending completion
     if (!state.backlog.some(g => g.id === game.id)) return;
     if (pendingCompleteGameId === game.id) return;
-    
+
     // Stop play session if active for this game
     if (activePlaySession && activePlaySession.gameId === game.id) {
         await stopPlaySession();
     }
-    
+
     // Notify the overlay
     if (isElectron) {
         window.questlog.showOverlayGameCompleted(game.name, ach.name);
     }
-    
+
     // In-app notification
     showToast(`🏆 Fin de jeu détectée pour ${game.name} ! (Succès : ${ach.name})`, '🏆');
-    
+
     // Set pending complete ID
     pendingCompleteGameId = game.id;
     selectedRating = 0;
-    
+
     // Pre-fill fields in the rating popup
     $('#rating-game-name').textContent = game.name;
     $('#rating-playtime').value = Math.round((game.playtime || 0) / 60);
     $('#rating-comment').value = `Fini automatiquement via le succès "${ach.name}" !`;
     $$('.star').forEach(s => s.classList.remove('active', 'hover-preview'));
     $('#btn-submit-rating').disabled = true;
-    
+
     // Open rating modal
     openModal($('#rating-overlay'));
 }
@@ -1757,7 +2207,7 @@ function pickRandomGame(showAnimation = true) {
 }
 
 // ---------- Confetti ----------
-window.launchConfetti = function() {
+window.launchConfetti = function () {
     const canvas = $('#confetti-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -1880,7 +2330,7 @@ function mergeImportedData(data) {
 async function clearAllData() {
     const confirmed = await showConfirmModal('⚠️ Supprimer TOUTES les données ? Cette action est irréversible.');
     if (!confirmed) return;
-    
+
     const finalConfirm = await showConfirmModal('Vraiment tout supprimer ? Dernière chance !');
     if (!finalConfirm) return;
 
@@ -1888,16 +2338,16 @@ async function clearAllData() {
     state.completed = [];
     state.currentGameId = null;
     state.profile = null;
-    
+
     if (isElectron) {
         await window.questlog.deleteProfile();
     }
-    
+
     await saveState();
     renderAll();
     closeModal($('#settings-overlay'));
     showToast('Toutes les données ont été supprimées.', '🗑️');
-    
+
     // Auto-redirect to Profile Creation screen
     setTimeout(() => {
         const overlay = $('#profile-creation-overlay');
@@ -1963,20 +2413,20 @@ function initEvents() {
             try {
                 if (Notification.permission === "granted") {
                     new Notification("Quest Log", {
-                        body: "L'application continue de tourner en arrière-plan (Tray) ! 🤖",
+                        body: "L'application continue de tourner en arrière-plan !",
                         icon: "icon.png"
                     });
                 } else if (Notification.permission !== "denied") {
                     Notification.requestPermission().then(permission => {
                         if (permission === "granted") {
                             new Notification("Quest Log", {
-                                body: "L'application continue de tourner en arrière-plan (Tray) ! 🤖",
+                                body: "L'application continue de tourner en arrière-plan !",
                                 icon: "icon.png"
                             });
                         }
                     });
                 }
-            } catch (e) {}
+            } catch (e) { }
 
             // Hide window instantly to avoid any rendering bugs
             window.questlog.closeWindow();
@@ -1997,12 +2447,12 @@ function initEvents() {
             $('#steam-status-label').textContent = 'Non connecté';
             $('#steam-status-label').style.color = '';
         }
-        
+
         const discordInput = $('#discord-client-id-input');
         if (discordInput) {
             discordInput.value = state.discordClientId || '';
         }
-        
+
         if (isElectron) {
             window.questlog.getAutoLaunch().then(enabled => {
                 $('#chk-auto-launch').checked = enabled;
@@ -2105,7 +2555,7 @@ function initEvents() {
             btn.textContent = originalText;
         }
     });
-    
+
     // Themes
     $$('.theme-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -2113,6 +2563,18 @@ function initEvents() {
             applyTheme(state.theme);
             saveState();
         });
+    });
+
+    // Languages
+    $('#btn-lang-fr').addEventListener('click', () => {
+        applyLanguage('fr');
+        saveState();
+        showToast(state.language === 'en' ? 'Language switched to French!' : 'Langue changée en Français !', '🌐');
+    });
+    $('#btn-lang-en').addEventListener('click', () => {
+        applyLanguage('en');
+        saveState();
+        showToast(state.language === 'en' ? 'Language switched to English!' : 'Langue changée en Anglais !', '🌐');
     });
 
     $('#btn-export-data').addEventListener('click', exportData);
@@ -2187,7 +2649,7 @@ function initEvents() {
         const apiKeySetup = $('#api-key-setup');
         if (apiKeySetup) apiKeySetup.style.display = 'none';
         $('#tab-search').click();
-        
+
         // Load default games immediately if no query
         const query = $('#rawg-search-input').value;
         performSearch(query);
@@ -2238,7 +2700,7 @@ function initEvents() {
         input.addEventListener('change', (e) => {
             const dropdown = e.target.closest('.custom-dropdown');
             const btn = dropdown.querySelector('.custom-dropdown-btn');
-            
+
             if (input.type === 'radio') {
                 btn.innerHTML = input.nextElementSibling.innerHTML;
                 dropdown.classList.remove('active');
@@ -2252,7 +2714,7 @@ function initEvents() {
                     btn.innerHTML = `${checked.length} sélectionnés`;
                 }
             }
-            
+
             // Reset offset and fetch
             performSearch($('#rawg-search-input').value, false);
         });
@@ -2268,9 +2730,9 @@ function initEvents() {
         $('#scanner-results').innerHTML = '';
 
         const games = await window.questlog.scanLocalGames();
-        
+
         $('#scanner-loading').style.display = 'none';
-        
+
         if (games.length === 0) {
             $('#scanner-results').innerHTML = '<p style="text-align:center; color: var(--text-tertiary); padding: 20px;">Aucun jeu trouvé sur le PC.</p>';
             $('#scanner-results').style.display = 'block';
@@ -2327,24 +2789,24 @@ function initEvents() {
     $('#btn-scanner-add').addEventListener('click', async () => {
         const selected = scannedGames.filter(g => g.selected);
         if (selected.length === 0) return;
-        
+
         $('#scanner-overlay').classList.remove('active');
         closeModal($('#modal-overlay'));
-        
+
         let addedCount = 0;
         for (const g of selected) {
-            const exists = state.backlog.some(x => x.name.toLowerCase() === g.name.toLowerCase()) || 
-                           state.completed.some(x => x.name.toLowerCase() === g.name.toLowerCase());
+            const exists = state.backlog.some(x => x.name.toLowerCase() === g.name.toLowerCase()) ||
+                state.completed.some(x => x.name.toLowerCase() === g.name.toLowerCase());
             if (!exists) {
                 // Determine platform correctly
                 let platformVal = 'PC';
                 if (g.platform === 'PC (Xbox)') platformVal = 'Xbox Series';
-                
+
                 await addGame(g.name, platformVal, 'Autre', '', '', true);
                 addedCount++;
             }
         }
-        
+
         if (addedCount > 0) {
             showToast(`${addedCount} jeu(x) ajouté(s) au backlog !`, '🖥️');
         } else {
@@ -2432,7 +2894,7 @@ function initEvents() {
         if (!currentDetailsId) return;
         const game = state.backlog.find(g => g.id === currentDetailsId);
         if (!game) return;
-        
+
         if (activePlaySession && activePlaySession.gameId === game.id) {
             stopPlaySession();
         } else {
@@ -2478,7 +2940,7 @@ function initEvents() {
     if (isElectron) {
         const btnCheckUpdates = $('#btn-check-updates');
         const updateStatusLabel = $('#update-status-label');
-        
+
         if (btnCheckUpdates) {
             btnCheckUpdates.addEventListener('click', async () => {
                 isManualUpdateCheck = true;
@@ -2521,7 +2983,7 @@ function initEvents() {
                 } else if (status === 'available') {
                     updateStatusLabel.textContent = 'Update disponible !';
                     updateStatusLabel.style.color = 'var(--accent-pink)';
-                    
+
                     $('#update-modal-version').textContent = `Version ${info.version || 'Nouvelle'}`;
                     $('#update-modal-message').innerHTML = `Une nouvelle version de Quest Log est disponible : <strong>v${info.version}</strong>.<br><br>Souhaitez-vous la télécharger et l'installer maintenant ?`;
                     $('#update-progress-container').style.display = 'none';
@@ -2539,7 +3001,7 @@ function initEvents() {
                 } else if (status === 'ready') {
                     updateStatusLabel.textContent = 'Mise à jour prête !';
                     updateStatusLabel.style.color = 'var(--accent-pink)';
-                    
+
                     $('#update-progress-container').style.display = 'none';
                     btnUpdateConfirm.disabled = false;
                     btnUpdateConfirm.textContent = 'Installer et Redémarrer';
@@ -2550,7 +3012,7 @@ function initEvents() {
                 } else if (status === 'error') {
                     updateStatusLabel.textContent = 'Erreur';
                     updateStatusLabel.style.color = 'var(--accent-red)';
-                    
+
                     // Only show alert to user if it was a manual click, and format it cleanly
                     if (isManualUpdateCheck) {
                         const errMsg = info ? (info.message || info) : 'Inaccessible';
@@ -2613,7 +3075,7 @@ async function init() {
         window.questlog.onAutoGameDetected((gameId) => {
             if (activePlaySession && activePlaySession.gameId === gameId) return;
             if (activePlaySession) return; // already tracking something else
-            
+
             const game = state.backlog.find(g => g.id === gameId);
             if (game) {
                 startPlaySession(game, true);
@@ -2644,14 +3106,14 @@ async function init() {
                     ach.unlocked = true;
                     ach.unlockTime = Math.floor(Date.now() / 1000);
                     updatedAny = true;
-                    
+
                     // Award XP and Gold
                     addXp(250);
                     addGold(50);
-                    
+
                     // Show in-app toast
                     showAchievementToast(ach.name, ach.description, 250, ach.icon);
-                    
+
                     // Show overlay toast
                     window.questlog.showOverlayAchievement({
                         name: ach.name,
@@ -2691,7 +3153,7 @@ async function checkAndShowChangelog() {
     try {
         const currentVersion = await window.questlog.getAppVersion();
         const lastSeen = state.lastVersionSeen || '';
-        
+
         // Only show if the version has changed
         if (currentVersion && lastSeen !== currentVersion) {
             // If it's a completely clean installation with no games and no username,
@@ -2701,7 +3163,7 @@ async function checkAndShowChangelog() {
                 await saveState();
                 return;
             }
-            
+
             const logData = CHANGELOGS[currentVersion];
             if (logData) {
                 const badgeEl = $('#changelog-badge');
@@ -2712,7 +3174,7 @@ async function checkAndShowChangelog() {
                 if (badgeEl) badgeEl.textContent = logData.badge;
                 if (titleEl) titleEl.textContent = logData.title;
                 if (dateEl) dateEl.textContent = `Date de déploiement : ${logData.date}`;
-                
+
                 if (listEl) {
                     listEl.innerHTML = '';
                     logData.items.forEach(item => {
@@ -2724,7 +3186,7 @@ async function checkAndShowChangelog() {
                         itemEl.style.border = '1px solid var(--bg-glass-border)';
                         itemEl.style.borderRadius = 'var(--radius-md)';
                         itemEl.style.padding = '12px';
-                        
+
                         itemEl.innerHTML = `
                             <div style="flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; background: rgba(244, 114, 182, 0.1); border: 1px solid rgba(244, 114, 182, 0.2); display: flex; align-items: center; justify-content: center; color: var(--accent-pink);">
                                 ${item.icon}
@@ -2737,11 +3199,11 @@ async function checkAndShowChangelog() {
                         listEl.appendChild(itemEl);
                     });
                 }
-                
+
                 // Save version seen
                 state.lastVersionSeen = currentVersion;
                 await saveState();
-                
+
                 // Show modal
                 openModal($('#changelog-overlay'));
             }
