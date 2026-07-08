@@ -32,12 +32,12 @@ function showMainWindow() {
         if (mainWindow.isMinimized()) mainWindow.restore();
         try {
             mainWindow.setOpacity(1.0);
-        } catch (e) {}
+        } catch (e) { }
         mainWindow.show();
         mainWindow.focus();
         try {
             mainWindow.webContents.send('window-shown');
-        } catch (e) {}
+        } catch (e) { }
     }
 }
 
@@ -128,10 +128,12 @@ function createTray() {
         const contextMenu = Menu.buildFromTemplate([
             { label: 'Afficher Quest Log', click: () => showMainWindow() },
             { type: 'separator' },
-            { label: 'Quitter', click: () => {
-                isQuitting = true;
-                app.quit();
-            }}
+            {
+                label: 'Quitter', click: () => {
+                    isQuitting = true;
+                    app.quit();
+                }
+            }
         ]);
 
         tray.setToolTip('Quest Log — Backlog Tracker');
@@ -489,7 +491,7 @@ ipcMain.handle('resolve-steam-id', async (event, profileInput) => {
         const handleResponse = (res) => {
             if (res.statusCode === 302 && res.headers.location) {
                 https.get(res.headers.location, { headers: { 'User-Agent': 'Mozilla/5.0' } }, handleResponse)
-                     .on('error', (e) => resolve({ success: false, error: e.message }));
+                    .on('error', (e) => resolve({ success: false, error: e.message }));
                 return;
             }
 
@@ -512,9 +514,9 @@ ipcMain.handle('resolve-steam-id', async (event, profileInput) => {
         };
 
         https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' } }, handleResponse)
-             .on('error', (e) => {
-                 resolve({ success: false, error: e.message });
-             });
+            .on('error', (e) => {
+                resolve({ success: false, error: e.message });
+            });
     });
 });
 
@@ -610,9 +612,9 @@ ipcMain.handle('auto-find-exe', async (event, gameName) => {
         };
 
         const possibleNames = getPossibleFolderNames(gameName).map(n => n.toLowerCase());
-        
+
         const roots = [];
-        
+
         // Steam libraries
         try {
             const paths = [
@@ -638,16 +640,16 @@ ipcMain.handle('auto-find-exe', async (event, gameName) => {
             for (const lib of libraries) {
                 roots.push(path.join(lib, 'steamapps', 'common'));
             }
-        } catch(e) {}
+        } catch (e) { }
 
         // Epic Games
         roots.push('C:\\Program Files\\Epic Games');
         roots.push('C:\\Program Files (x86)\\Epic Games');
-        
+
         // GOG Games
         roots.push('C:\\Program Files (x86)\\GOG Galaxy\\Games');
         roots.push('C:\\GOG Games');
-        
+
         // Generic paths across drives
         const drives = ['C', 'D', 'E', 'F', 'G'];
         for (const drive of drives) {
@@ -673,20 +675,20 @@ ipcMain.handle('auto-find-exe', async (event, gameName) => {
                         }
                     } else if (file.toLowerCase().endsWith('.exe')) {
                         const lowerFile = file.toLowerCase();
-                        const isInstallerOrHelper = 
-                            lowerFile.includes('unitycrashhandler') || 
-                            lowerFile.includes('unins') || 
-                            lowerFile.includes('vc_redist') || 
-                            lowerFile.includes('dxwebsetup') || 
-                            lowerFile.includes('dotnet') || 
-                            lowerFile.includes('cleanup') || 
-                            lowerFile.includes('touchup') || 
-                            lowerFile.includes('crash') || 
-                            lowerFile.includes('update') || 
-                            lowerFile.includes('setup') || 
-                            lowerFile.includes('config') || 
+                        const isInstallerOrHelper =
+                            lowerFile.includes('unitycrashhandler') ||
+                            lowerFile.includes('unins') ||
+                            lowerFile.includes('vc_redist') ||
+                            lowerFile.includes('dxwebsetup') ||
+                            lowerFile.includes('dotnet') ||
+                            lowerFile.includes('cleanup') ||
+                            lowerFile.includes('touchup') ||
+                            lowerFile.includes('crash') ||
+                            lowerFile.includes('update') ||
+                            lowerFile.includes('setup') ||
+                            lowerFile.includes('config') ||
                             lowerFile.includes('tool');
-                        
+
                         if (!isInstallerOrHelper) {
                             candidateExes.push({
                                 path: fullPath,
@@ -696,7 +698,7 @@ ipcMain.handle('auto-find-exe', async (event, gameName) => {
                         }
                     }
                 }
-            } catch(e) {}
+            } catch (e) { }
         };
 
         // Scan folders matching game name
@@ -708,14 +710,14 @@ ipcMain.handle('auto-find-exe', async (event, gameName) => {
                     const stat = fs.statSync(fullPath);
                     if (stat.isDirectory()) {
                         const cleanFile = cleanString(file);
-                        if (possibleNames.includes(file.toLowerCase()) || 
-                            possibleNames.includes(cleanFile) || 
+                        if (possibleNames.includes(file.toLowerCase()) ||
+                            possibleNames.includes(cleanFile) ||
                             file.toLowerCase().includes(possibleNames[0])) {
                             scanDir(fullPath);
                         }
                     }
                 }
-            } catch(e) {}
+            } catch (e) { }
         }
 
         if (candidateExes.length === 0) {
@@ -724,15 +726,15 @@ ipcMain.handle('auto-find-exe', async (event, gameName) => {
 
         // Choose the best executable
         const gameNameClean = cleanString(gameName);
-        
+
         // 1. Try exact name match
         let bestExe = candidateExes.find(e => cleanString(e.name) === gameNameClean + 'exe');
-        
+
         // 2. Try prefix/contains match
         if (!bestExe) {
             bestExe = candidateExes.find(e => cleanString(e.name).includes(gameNameClean) || gameNameClean.includes(cleanString(e.name).replace('exe', '')));
         }
-        
+
         // 3. Fallback to largest executable
         if (!bestExe) {
             bestExe = candidateExes.reduce((max, current) => current.size > max.size ? current : max, candidateExes[0]);
@@ -749,7 +751,7 @@ ipcMain.handle('launch-game', async (event, gameId, exePath) => {
     if (activeProcess) {
         return { success: false, error: 'Un jeu est déjà en cours d\'exécution.' };
     }
-    
+
     const { spawn } = require('child_process');
     try {
         const dir = path.dirname(exePath);
@@ -849,14 +851,14 @@ ipcMain.handle('scan-local-game-settings', async (event, exePath) => {
                         }));
                         break;
                     }
-                } catch(e) {
+                } catch (e) {
                     console.error('Failed to parse local achievements.json:', e);
                 }
             }
         }
 
         return result;
-    } catch(e) {
+    } catch (e) {
         console.error('Error scanning local game settings:', e);
         return null;
     }
@@ -891,7 +893,7 @@ ipcMain.handle('select-achievements-json', async () => {
                     icon: ''
                 }));
             }
-        } catch(e) {
+        } catch (e) {
             return { error: 'Format de fichier JSON invalide.' };
         }
     }
@@ -903,7 +905,7 @@ ipcMain.handle('fetch-public-steam-schema', async (event, appId, lang) => {
     return new Promise((resolve) => {
         const url = `https://steamcommunity.com/stats/${appId}/achievements/?xml=1`;
         const queryLang = lang || 'french';
-        const headers = { 
+        const headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Cookie': `l=${queryLang}`
         };
@@ -939,7 +941,7 @@ ipcMain.handle('fetch-public-steam-schema', async (event, appId, lang) => {
                             }
                         }
                     }
-                    
+
                     // Fallback to HTML parsing if XML parsing yielded nothing
                     if (achievements.length === 0) {
                         const rowRegex = /<div class="achieveRow\s*">([\s\S]*?)<div style="clear:\s*both;?"><\/div>/gi;
@@ -994,6 +996,14 @@ ipcMain.on('window-maximize', () => {
 
 ipcMain.on('window-close', () => {
     if (mainWindow) mainWindow.close();
+});
+
+ipcMain.handle('show-and-center-window', () => {
+    showMainWindow();
+    if (mainWindow) {
+        mainWindow.center();
+    }
+    return { success: true };
 });
 
 // ---------- App Lifecycle ----------
@@ -1125,7 +1135,7 @@ function createOverlayWindow() {
             overlayWindow = null;
             isOverlayLoaded = false;
         });
-    } catch(e) {
+    } catch (e) {
         console.error('Failed to create overlay window:', e);
     }
 }
@@ -1134,7 +1144,7 @@ function destroyOverlayWindow() {
     if (overlayWindow) {
         try {
             overlayWindow.close();
-        } catch(e) {}
+        } catch (e) { }
         overlayWindow = null;
     }
 }
@@ -1183,7 +1193,7 @@ async function scanAllLocalAchievements(appId) {
                 }
             }
         }
-    } catch(e) {}
+    } catch (e) { }
 
     // 2. RUNE Public Documents Path
     try {
@@ -1199,7 +1209,7 @@ async function scanAllLocalAchievements(appId) {
                 }
             }
         }
-    } catch(e) {}
+    } catch (e) { }
 
     // 3. CODEX / PLAZA Public Documents Path
     try {
@@ -1215,7 +1225,7 @@ async function scanAllLocalAchievements(appId) {
                 }
             }
         }
-    } catch(e) {}
+    } catch (e) { }
 
     return Array.from(new Set(unlocked));
 }
@@ -1293,7 +1303,7 @@ ipcMain.handle('check-local-achievements', async (event, appId) => {
     try {
         const list = await scanAllLocalAchievements(appId);
         return { success: true, achievements: list };
-    } catch(e) {
+    } catch (e) {
         return { success: false, error: e.message };
     }
 });
@@ -1307,7 +1317,7 @@ ipcMain.handle('watch-local-achievements', (event, appId) => {
     achievementsWatchInterval = setInterval(async () => {
         try {
             const currentUnlocked = await scanAllLocalAchievements(appId);
-            
+
             if (lastUnlockedCount === -1) {
                 lastUnlockedCount = currentUnlocked.length;
                 lastUnlockedList = [...currentUnlocked];
@@ -1318,7 +1328,7 @@ ipcMain.handle('watch-local-achievements', (event, appId) => {
             if (newlyUnlocked.length > 0) {
                 lastUnlockedList = [...currentUnlocked];
                 lastUnlockedCount = currentUnlocked.length;
-                
+
                 // Notify the main window renderer about new achievements
                 if (mainWindow && !mainWindow.isDestroyed()) {
                     mainWindow.webContents.send('local-achievements-updated', newlyUnlocked);
@@ -1327,7 +1337,7 @@ ipcMain.handle('watch-local-achievements', (event, appId) => {
                 lastUnlockedList = [...currentUnlocked];
                 lastUnlockedCount = currentUnlocked.length;
             }
-        } catch(e) {
+        } catch (e) {
             console.error('Error polling achievements in watcher:', e);
         }
     }, 2000);
@@ -1414,7 +1424,7 @@ if (process.platform === 'win32') {
     try {
         const net = require('net');
         const originalCreateConnection = net.createConnection;
-        net.createConnection = function(path, ...args) {
+        net.createConnection = function (path, ...args) {
             if (typeof path === 'string' && path.startsWith('\\\\?\\pipe\\discord-ipc-')) {
                 const newPath = path.replace('\\\\?\\pipe\\', '\\\\.\\pipe\\');
                 console.log(`[DiscordRPC Patch] Redirecting pipe from ${path} to ${newPath}`);
@@ -1432,7 +1442,7 @@ function initDiscordRPC() {
     try {
         console.log(`Initializing Discord RPC with Client ID: ${currentDiscordClientId}`);
         rpcClient = new RPC.Client({ transport: 'ipc' });
-        
+
         rpcClient.on('ready', () => {
             console.log('Discord Rich Presence (DRP) is ready!');
             rpcReady = true;
@@ -1478,18 +1488,19 @@ function initDiscordRPC() {
 
 function updateDiscordPresence(gameName, coverUrl, steamAppId) {
     const cleanedGameName = gameName.length > 80 ? gameName.slice(0, 77) + '...' : gameName;
-    
+
     const activity = {
         details: `Joue à ${cleanedGameName}`,
         state: 'via Quest Log',
         startTimestamp: Date.now(),
         buttons: [
-            { label: 'Suivre mon Backlog 🎮', url: 'https://github.com/weeever' }
+            { label: 'Télécharger Quest Log', url: 'https://quest-log.fr' },
+            { label: 'Suivre mon Backlog', url: 'https://quest-log.fr' }
         ]
     };
-    
+
     let optimizedCoverUrl = coverUrl;
-    
+
     // Prioritize high-res Steam Library Capsule if game has a steamAppId linked
     if (steamAppId) {
         optimizedCoverUrl = `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${steamAppId}/library_600x900.jpg`;
@@ -1530,7 +1541,7 @@ function clearDiscordPresence() {
     if (rpcReady && rpcClient) {
         try {
             rpcClient.clearActivity().catch(err => console.warn('Error clearing RPC activity:', err));
-        } catch(e) {
+        } catch (e) {
             console.error('Failed to clear Discord Presence:', e);
         }
     }
@@ -1549,8 +1560,8 @@ ipcMain.handle('update-discord-client-id', (event, clientId) => {
         currentDiscordClientId = newId;
         if (rpcClient) {
             try {
-                rpcClient.destroy().catch(() => {});
-            } catch(e) {}
+                rpcClient.destroy().catch(() => { });
+            } catch (e) { }
             rpcClient = null;
             rpcReady = false;
         }
@@ -1630,7 +1641,7 @@ autoUpdater.on('error', (err) => {
 // Smoothly fade out the window before hiding it
 ipcMain.handle('hide-window-with-animation', () => {
     if (!mainWindow) return { success: true };
-    
+
     let opacity = 1.0;
     const interval = setInterval(() => {
         opacity -= 0.1;
@@ -1647,6 +1658,6 @@ ipcMain.handle('hide-window-with-animation', () => {
             }
         }
     }, 20); // 200ms total fade out
-    
+
     return { success: true };
 });

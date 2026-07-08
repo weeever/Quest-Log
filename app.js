@@ -2403,6 +2403,12 @@ function showSessionRecap(game, elapsedMinutes, xpEarned, goldEarned) {
     const overlay = $('#session-recap-overlay');
     if (!overlay) return;
 
+    if (isElectron) {
+        window.questlog.showAndCenterWindow().catch(err => {
+            console.warn('Failed to restore and center window for session recap:', err);
+        });
+    }
+
     // Game Metadata
     $('#recap-game-name').textContent = game.name;
     $('#recap-game-meta').textContent = `${game.platform} • ${game.genre}`;

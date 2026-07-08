@@ -39,3 +39,7 @@ $RECYCLE.BIN/
 # Agent and Website configurations
 .agents/
 website/
+
+# Large ZIP archives and SDKs
+*.zip
+DiscordSocialSdk*
