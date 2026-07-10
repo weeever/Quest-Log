@@ -61,14 +61,6 @@ const CHANGELOGS = {
                 </svg>`
             },
             {
-                title: "Compteur de Lancements",
-                desc: "Suivez votre assiduité ! L'application comptabilise désormais le nombre total de fois où vous avez démarré chaque jeu depuis votre tableau de bord, affiché fièrement dans la fiche des détails.",
-                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
-                    <path d="M4.5 16.5c-1.5 1.26-2.5 3.19-2.5 5.5h20c0-2.31-1-4.24-2.5-5.5"/>
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 10h-2V7h2v5zm0 4h-2v-2h2v2z"/>
-                </svg>`
-            },
-            {
                 title: "Stabilisation & Boosts Intelligents",
                 desc: "Les jeux non sortis (comme Light No Fire) sont désormais exclus du calcul des Boosts Quotidiens d'XP. Les étiquettes affichent « Soon » de manière universelle, et la persistance des suppressions de SteamID Custom a été fiabilisée.",
                 icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
@@ -3130,7 +3122,12 @@ async function startPlaySession(game, isAutoDetect = false) {
                 isInitialRender = false;
                 renderBacklog($('#backlog-search').value);
             }
-        }, 60000)
+        }, 60000),
+        achievementsPollInterval: game.steamAppId ? setInterval(async () => {
+            if (activePlaySession && activePlaySession.gameId === game.id) {
+                await fetchAchievementsFromSteam(game, false);
+            }
+        }, 15000) : null
     };
 
     if (game.steamAppId) {
@@ -3152,6 +3149,9 @@ async function stopPlaySession() {
     if (!activePlaySession) return;
 
     clearInterval(activePlaySession.timerInterval);
+    if (activePlaySession.achievementsPollInterval) {
+        clearInterval(activePlaySession.achievementsPollInterval);
+    }
     if (isElectron) {
         window.questlog.stopWatchingLocalAchievements();
         window.questlog.destroyOverlay();
@@ -3499,24 +3499,20 @@ function openGameDetails(id, fromCompleted = false) {
     // Render achievements
     renderAchievementsInDetails(game);
 
-    // Display playtime & launch count in details
+    // Display playtime in details
     const playtime = game.playtime || 0;
     const hours = Math.round(playtime / 60 * 10) / 10;
     const playtimeLabel = playtime > 0 ? ` • <svg class="stat-svg" style="width:12px; height:12px; margin-right:2px; display:inline-block; vertical-align:middle;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${hours}h` : '';
-    const launchCount = game.launchCount || 0;
-    const launchLabel = launchCount > 0 ? ` • <span style="display:inline-flex; align-items:center; gap:2px; vertical-align:middle;"><svg class="stat-svg" style="width:12px; height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2 2H5c-.55 0-1-.45-1-1V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> ${state.language === 'en' ? `${launchCount} launch${launchCount > 1 ? 'es' : ''}` : `${launchCount} lancement${launchCount > 1 ? 's' : ''}`}</span>` : '';
 
     if (fromCompleted) {
-        // Fix target for SVG link above to be cleaner
-        const cleanLaunchLabel = launchCount > 0 ? ` • <span style="display:inline-flex; align-items:center; gap:2px; vertical-align:middle;"><svg class="stat-svg" style="width:12px; height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> ${state.language === 'en' ? `${launchCount} launch${launchCount > 1 ? 'es' : ''}` : `${launchCount} lancement${launchCount > 1 ? 's' : ''}`}</span>` : '';
-        $('#details-date').innerHTML = formatDate(game.completedAt) + playtimeLabel + cleanLaunchLabel;
+        $('#details-date').innerHTML = formatDate(game.completedAt) + playtimeLabel;
     } else {
         let releaseLabel = '';
         if (!isReleased) {
             const releaseDisplay = formattedReleaseDate || (state.language === 'en' ? 'TBD' : 'À déterminer');
             releaseLabel = ` • <span style="color: var(--accent-violet); font-weight: 700; display: inline-flex; align-items: center; gap: 4px; vertical-align: middle;"><svg class="stat-svg" style="width:12px; height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${state.language === 'en' ? 'Releasing' : 'Sortie'} : ${releaseDisplay}</span>`;
         }
-        $('#details-date').innerHTML = `Ajouté le ${formatDate(game.addedAt)}${playtimeLabel}${launchLabel}${releaseLabel}`;
+        $('#details-date').innerHTML = `Ajouté le ${formatDate(game.addedAt)}${playtimeLabel}${releaseLabel}`;
     }
 
     // Populate Steam AppID input
@@ -4140,6 +4136,16 @@ function setupSortDropdowns() {
 // ---------- Initialisation & Events ----------
 function initEvents() {
     setupSortDropdowns();
+
+    // Window focus real-time online achievements sync
+    window.addEventListener('focus', async () => {
+        if (activePlaySession) {
+            const game = state.backlog.find(g => g.id === activePlaySession.gameId) || state.completed.find(g => g.id === activePlaySession.gameId);
+            if (game && game.steamAppId) {
+                await fetchAchievementsFromSteam(game, false);
+            }
+        }
+    });
 
     // Window Controls (Electron)
     if (isElectron) {
