@@ -849,7 +849,7 @@ const LOCALES = {
         stats: "Statistiques",
         settings: "Paramètres",
         add_game: "Ajouter",
-        app_title: "Quest Log - Beta 0.0.7",
+        app_title: "Quest Log - Beta v0.0.8",
         global_progress: "Progression Globale",
         filter_placeholder: "Filtrer...",
         title_backlog: "Jeux dans le backlog",
