@@ -1987,6 +1987,31 @@ function initDiscordRPC() {
     }
 }
 
+function checkUrlExists(url) {
+    return new Promise((resolve) => {
+        try {
+            const parsedUrl = new URL(url);
+            const options = {
+                method: 'HEAD',
+                host: parsedUrl.host,
+                path: parsedUrl.pathname + parsedUrl.search,
+                timeout: 1200
+            };
+            const req = https.request(options, (res) => {
+                resolve(res.statusCode === 200);
+            });
+            req.on('error', () => resolve(false));
+            req.on('timeout', () => {
+                req.destroy();
+                resolve(false);
+            });
+            req.end();
+        } catch (e) {
+            resolve(false);
+        }
+    });
+}
+
 function updateDiscordPresence(gameName, coverUrl, steamAppId) {
     const cleanedGameName = gameName.length > 80 ? gameName.slice(0, 77) + '...' : gameName;
 
@@ -2000,40 +2025,60 @@ function updateDiscordPresence(gameName, coverUrl, steamAppId) {
         ]
     };
 
-    let optimizedCoverUrl = coverUrl;
-
-    // Prioritize high-res Steam Library Capsule if game has a steamAppId linked
-    if (steamAppId) {
-        optimizedCoverUrl = `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${steamAppId}/library_600x900.jpg`;
-    } else if (coverUrl && coverUrl.includes('igdb.com')) {
-        // Optimize cover resolution for high-res rendering on Discord (t_1080p is maximum sharpness)
-        optimizedCoverUrl = coverUrl.replace(/\/t_[a-z0-9_]+\//, '/t_1080p/');
-    }
-
-    if (optimizedCoverUrl && optimizedCoverUrl.startsWith('http')) {
-        // Logo of the game as large image, Quest Log logo as small image (loaded from direct Imgur URL)
-        activity.largeImageKey = optimizedCoverUrl;
-        activity.largeImageText = cleanedGameName;
-        activity.smallImageKey = 'https://i.imgur.com/AfxUIqb.png';
-        activity.smallImageText = 'Quest Log';
-    } else {
-        // Fallback if no game cover
-        activity.largeImageKey = 'https://i.imgur.com/AfxUIqb.png';
-        activity.largeImageText = cleanedGameName;
-    }
-
-    if (rpcReady && rpcClient) {
-        try {
-            rpcClient.setActivity(activity).catch(err => {
-                console.warn('Error setting RPC activity:', err);
-            });
-        } catch (e) {
-            console.error('Failed to set Discord Presence:', e);
+    const applyPresence = (finalCoverUrl) => {
+        if (finalCoverUrl && finalCoverUrl.startsWith('http')) {
+            activity.largeImageKey = finalCoverUrl;
+            activity.largeImageText = cleanedGameName;
+            activity.smallImageKey = 'https://i.imgur.com/AfxUIqb.png';
+            activity.smallImageText = 'Quest Log';
+        } else {
+            activity.largeImageKey = 'https://i.imgur.com/AfxUIqb.png';
+            activity.largeImageText = cleanedGameName;
         }
+
+        if (rpcReady && rpcClient) {
+            try {
+                rpcClient.setActivity(activity).catch(err => {
+                    console.warn('Error setting RPC activity:', err);
+                });
+            } catch (e) {
+                console.error('Failed to set Discord Presence:', e);
+            }
+        } else {
+            pendingActivity = activity;
+            initDiscordRPC();
+        }
+    };
+
+    if (steamAppId) {
+        const libraryUrl = `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${steamAppId}/library_600x900.jpg`;
+        const headerUrl = `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${steamAppId}/header.jpg`;
+
+        checkUrlExists(libraryUrl).then((exists) => {
+            if (exists) {
+                applyPresence(libraryUrl);
+            } else {
+                checkUrlExists(headerUrl).then((hExists) => {
+                    if (hExists) {
+                        applyPresence(headerUrl);
+                    } else if (coverUrl && coverUrl.startsWith('http')) {
+                        let optimizedCoverUrl = coverUrl;
+                        if (coverUrl.includes('igdb.com')) {
+                            optimizedCoverUrl = coverUrl.replace(/\/t_[a-z0-9_]+\//, '/t_1080p/');
+                        }
+                        applyPresence(optimizedCoverUrl);
+                    } else {
+                        applyPresence('https://i.imgur.com/AfxUIqb.png');
+                    }
+                });
+            }
+        });
     } else {
-        // Queue the activity until RPC is ready
-        pendingActivity = activity;
-        initDiscordRPC();
+        let optimizedCoverUrl = coverUrl;
+        if (coverUrl && coverUrl.includes('igdb.com')) {
+            optimizedCoverUrl = coverUrl.replace(/\/t_[a-z0-9_]+\//, '/t_1080p/');
+        }
+        applyPresence(optimizedCoverUrl);
     }
 }
 
