@@ -2555,6 +2555,7 @@ async function tryAutoFindSteamAppId(game) {
 
 async function fetchAchievementsFromSteam(game, silent = false) {
     if (!game.steamAppId) return { success: false, error: 'No Steam AppID linked' };
+    console.log(`[Steam Sync] Starting sync for "${game.name}" (silent: ${silent})`);
     try {
         let schemaList = [];
         const langParam = state.language === 'en' ? 'english' : 'french';
@@ -2675,19 +2676,23 @@ async function fetchAchievementsFromSteam(game, silent = false) {
 
                 if (!wasSimulated && !reallySilent) {
                     const isGameCurrentlyActive = activePlaySession && activePlaySession.gameId === game.id;
+                    const wasRecentlyPlayed = game.lastPlayed && (Date.now() - game.lastPlayed < 5 * 60 * 1000);
+                    const shouldNotify = isGameCurrentlyActive || wasRecentlyPlayed;
+
                     mapped.forEach(newAch => {
                         const oldAch = game.achievements.find(o => o.apiname.toLowerCase() === newAch.apiname.toLowerCase());
                         const isOldUnlocked = oldAch ? oldAch.unlocked : false;
                         const isOldXpAwarded = oldAch ? (oldAch.xpAwarded === true || oldAch.xpAwarded === 1) : false;
 
                         if (newAch.unlocked && !isOldUnlocked && !isOldXpAwarded) {
-                            if (isGameCurrentlyActive) {
+                            console.log(`[Steam Sync] Achievement "${newAch.name}" newly unlocked! isOldXpAwarded: ${isOldXpAwarded}, silent: ${silent}, isFirstSync: ${isFirstSync}, shouldNotify: ${shouldNotify}`);
+                            if (shouldNotify) {
                                 addXp(250);
                                 addGold(50);
                                 newAch.xpAwarded = true; // Mark as rewarded!
                                 
                                 showAchievementToast(newAch.name, newAch.description, 250, newAch.icon);
-                                if (isElectron) {
+                                if (isElectron && isGameCurrentlyActive) {
                                     window.questlog.showOverlayAchievement({
                                         name: newAch.name,
                                         description: newAch.description,
@@ -2722,6 +2727,8 @@ async function fetchAchievementsFromSteam(game, silent = false) {
             if (currentDetailsId === game.id) {
                 renderAchievementsInDetails(game);
             }
+
+            console.log(`[Steam Sync] Sync completed for "${game.name}" with ${schemaList.length} achievements`);
 
             if (fetchFailed) {
                 return { success: false, error: fetchError };
@@ -3173,6 +3180,18 @@ async function stopPlaySession() {
         const goldEarned = Math.round(elapsedMinutes * 1 * goldMultiplier); // 1 gold per minute played (x2 if boosted, x3 if mega boosted)
 
         game.lastPlayed = Date.now();
+
+        // Schedule delayed achievements checks at 45s and 90s after closing to capture late Steam Web API updates
+        if (game.steamAppId) {
+            setTimeout(async () => {
+                const cg = state.backlog.find(g => g.id === game.id) || state.completed.find(g => g.id === game.id);
+                if (cg) await fetchAchievementsFromSteam(cg, false);
+            }, 45000);
+            setTimeout(async () => {
+                const cg = state.backlog.find(g => g.id === game.id) || state.completed.find(g => g.id === game.id);
+                if (cg) await fetchAchievementsFromSteam(cg, false);
+            }, 90000);
+        }
 
         // Award rewards
         if (xpEarned > 0) {
